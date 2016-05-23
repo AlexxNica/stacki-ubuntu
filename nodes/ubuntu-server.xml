@@ -1,0 +1,89 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+<post interpreter="/opt/stack/bin/python">
+import stack.api
+import sys
+from shutil import copyfile
+import os
+res = stack.api.Call('list pallet')
+found = False
+
+def doit(name,version,boxos,release,arch):
+
+	rootdir = '/export/stack/pallets'
+	baseubuntu = "/".join([rootdir, name, version, boxos, arch])
+	netinstall = 'install/netboot/ubuntu-installer/amd64'
+	initrd = '/'.join([baseubuntu,netinstall,'initrd.gz'])
+	vmlinuz = '/'.join([baseubuntu,netinstall,'linux'])
+	tftp_initrd = '/'.join(['/tftpboot/pxelinux', 'initrd.%s' % release])
+	tftp_vmlinuz = '/'.join(['/tftpboot/pxelinux', 'vmlinuz.%s' % release])
+	copyfile(initrd, tftp_initrd)
+	copyfile(vmlinuz, tftp_vmlinuz)
+	os.chmod(tftp_vmlinuz, 0755)
+	httpubuntu = "/install/%s" % '/'.join(baseubuntu.split('/')[3:])
+
+	kern = 'vmlinuz.%s' % release
+	ramdisk = 'initrd.%s' % release
+
+	ubuntu_args='install auto=true \
+url=http://&Kickstart_PrivateAddress;/install/sbin/preseed.cgi?arch=x86_64\
+&amp;np=2&amp;os=ubuntu ksdevice=bootif biosdevname=0 hostname=unassigned \
+locale=en_US.UTF-8 keyboard-configuration/layout=us \
+live-installer/net-image=http://&Kickstart_PrivateAddress;%s\
+/install/filesystem.squashfs ramdisk_size=150000 nousb interface=auto \
+netcfg/get_nameservers=&Kickstart_PrivateDNSServers; \
+console=tty0 console=ttyS0,115200n8 \
+priority=critical' % httpubuntu
+
+	stack.api.Call("add bootaction", [ 'action=ubuntu.%s' % release, 
+			'kernel=%s' % kern, 'ramdisk=%s' % ramdisk,
+			'args=%s' % ubuntu_args])
+	stack.api.Call("set attr", ['attr=UbuntDistroName', 'value=%s' % release])
+	stack.api.Call("set attr", ['attr=UbuntuHttpDir', 'value=%s' % httpubuntu])
+	stack.api.Call("set attr", ['attr=UbuntuNetImagePath', 
+			'value=%s/install/filesystem.squashfs' % httpubuntu])
+	stack.api.Call("set attr", ['attr=UbuntAptSetupProtocol', 'value=http'])
+	stack.api.Call("set attr", ['attr=UbuntuAptSecurityPath', 'value=%s' % httpubuntu])
+	stack.api.Call("set attr", ['attr=ubuntu.netcfg', 'value=static'])
+
+for i in res:
+	boxes = i['boxes'].split()
+	if i['os'] == 'ubuntu':
+		found = True
+		# create box, add pallets
+		if i['boxes'] == '':
+			if stack.api.Call('list box %s' % i['os']) == []:
+				print "Adding box: %s" % i['os']
+				stack.api.Call('add.box', 
+					[ i['os'], 'os=%s' % i['os']])
+				stack.api.Call('enable pallet', 
+					[ 'stacki', 'box=%s' % i['os']])
+				stack.api.Call('enable pallet', 
+					[ i['name'], 'box=%s' % i['os'],
+					'version=%s' % i['version']])
+
+		elif len(boxes) > 0:
+			for box in boxes:
+				if box not in [ 'ubuntu', 'ubuntu-bridge']:
+					stack.api.Call('disable pallet', 
+						[i['name'], "box=%s" % box])
+						
+		doit(i['name'],i['version'],i['os'], i['release'].lower(),i['arch'])
+	else:
+		continue
+
+if found == False:
+	msg = '\nNo Ubuntu distribution found.\n' 
+	msg += '\nAdd an Ubuntu ISO with: \n'
+	msg += '\n"stack add pallet "some ubuntu distro".iso"\n'
+	msg += '\nThen run: "stack run pallet ubuntu-bridge | bash" again.'
+	sys.exit(msg)
+
+</post>
+<post>
+systemctl restart httpd
+</post>
+</kickstart> 
+
