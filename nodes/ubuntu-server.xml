@@ -47,6 +47,7 @@ priority=critical' % httpubuntu
 	stack.api.Call("set attr", ['attr=UbuntAptSetupProtocol', 'value=http'])
 	stack.api.Call("set attr", ['attr=UbuntuAptSecurityPath', 'value=%s' % httpubuntu])
 	stack.api.Call("set attr", ['attr=ubuntu.netcfg', 'value=static'])
+	stack.api.Call("set attr", ['attr=ubuntu.grub_dev', 'value=/dev/sda'])
 
 for i in res:
 	boxes = i['boxes'].split()

@@ -17,4 +17,5 @@ All rights reserved. Rocks(r) v5.4 www.rocksclusters.org
 </copyright>
 
 <grub_installer>only_debian boolean true</grub_installer>
+<grub_installer>bootdev string &ubuntu.grub_dev;</grub_installer>
 </kickstart> 
