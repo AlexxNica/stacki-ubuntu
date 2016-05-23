@@ -40,7 +40,7 @@ priority=critical' % httpubuntu
 	stack.api.Call("add bootaction", [ 'action=ubuntu.%s' % release, 
 			'kernel=%s' % kern, 'ramdisk=%s' % ramdisk,
 			'args=%s' % ubuntu_args])
-	stack.api.Call("set attr", ['attr=UbuntDistroName', 'value=%s' % release])
+	stack.api.Call("set attr", ['attr=UbuntuDistroName', 'value=%s' % release])
 	stack.api.Call("set attr", ['attr=UbuntuHttpDir', 'value=%s' % httpubuntu])
 	stack.api.Call("set attr", ['attr=UbuntuNetImagePath', 
 			'value=%s/install/filesystem.squashfs' % httpubuntu])
@@ -63,6 +63,7 @@ for i in res:
 				stack.api.Call('enable pallet', 
 					[ i['name'], 'box=%s' % i['os'],
 					'version=%s' % i['version']])
+
 
 		elif len(boxes) > 0:
 			for box in boxes:
