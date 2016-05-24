@@ -44,5 +44,5 @@ class Implementation(stack.commands.Implementation):
 		for i in list:
 			self.owner.addOutput(host, i)
 		self.owner.addOutput(host, self.owner.annotate(']]>'))
-		self.owner.addOutput(host, self.owner.annotate('</section'))
+		self.owner.addOutput(host, self.owner.annotate('</section>'))
 		self.owner.addOutput(host, self.owner.annotate('</profile>'))
