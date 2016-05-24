@@ -1017,6 +1017,13 @@ class Generator_ubuntu(Generator):
 	def handle_finish_install(self, node):
 		self.ks['finish'].append('d-i finish-install/%s' % self.getChildText(node))
 
+	def handle_pre(self, node):
+		pass
+
+	def handle_package(self, node):
+		pass
+
+
 		
 	def get_context(self, node):
 		# This function returns the rollname,

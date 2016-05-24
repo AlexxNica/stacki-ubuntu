@@ -29,7 +29,7 @@ class Implementation(stack.commands.Implementation):
 		# individual files.
 		list = []	
 		self.generator.parse(xml)
-		self.owner.addOutput(host, '&lt;profile lang="preseed.cfg"&gt;\n')
+		self.owner.addOutput(host, '<profile lang="preseed.cfg">\n')
 		self.get_section = ['main', 'packages', 'post', 'finish']
 		
 		for section in self.get_section:	
@@ -39,10 +39,10 @@ class Implementation(stack.commands.Implementation):
 			list += self.generator.generate(self.owner.section,
 					annotation=self.owner.annotation)
 		self.owner.addOutput(host,
-			self.owner.annotate('&lt;section name="preseed.cfg"&gt;'))
-		self.owner.addOutput(host, self.owner.annotate('&lt;![CDATA['))
+			self.owner.annotate('<section name="preseed.cfg">'))
+		self.owner.addOutput(host, self.owner.annotate('<![CDATA['))
 		for i in list:
 			self.owner.addOutput(host, i)
-		self.owner.addOutput(host, self.owner.annotate(']]&gt;'))
-		self.owner.addOutput(host, self.owner.annotate('&lt;/section&gt;'))
-		self.owner.addOutput(host, self.owner.annotate('&lt;/profile&gt;'))
+		self.owner.addOutput(host, self.owner.annotate(']]>'))
+		self.owner.addOutput(host, self.owner.annotate('</section'))
+		self.owner.addOutput(host, self.owner.annotate('</profile>'))
