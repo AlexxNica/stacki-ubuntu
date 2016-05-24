@@ -8,4 +8,4 @@
 
 ROLLROOT = .
 
--include $(ROLLSBUILD)/etc/CCRolls.mk
+include $(PALLETBUILD)/etc/CCRolls.mk

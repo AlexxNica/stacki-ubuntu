@@ -68,12 +68,11 @@
 		<to>ubuntu-grub-installer</to>
 		<to>ubuntu-finish-install</to>
 	</edge>
+
 	<order head="server" os="ubuntu">
-		<tail>ubuntu-server-stack</tail>
 	</order>
 
 	<edge from="server" os="ubuntu">
-		<to>ubuntu-server-stack</to>
 		<to>ubuntu-server</to>
 	</edge>
 

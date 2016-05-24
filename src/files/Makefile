@@ -50,10 +50,21 @@ build::
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/list/host/profile
+	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet
 	mkdir -p $(ROOT)/export/stack/sbin
+	mkdir -p $(ROOT)/etc/httpd/conf.d
 	$(INSTALL) -m0755 preseed.cgi $(ROOT)/export/stack/sbin
+	$(INSTALL) -m0755 https.conf $(ROOT)/etc/httpd/conf.d
 	$(INSTALL) -m0644 imp_ubuntu.py \
 		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/list/host/profile
+	$(INSTALL) -m0644 imp_foreign_ubuntu.py \
+		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet
+	$(INSTALL) -m0644 imp_mount_redhat.py \
+		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet
+	$(INSTALL) -m0644 imp_umount_redhat.py \
+		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet
+	$(INSTALL) -m0644 __init__.py \
+		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet
 	cp /opt/stack/lib/python2.6/site-packages/stack/gen.py $(ROOT)/gen.py.orig
 	( 										\
 		cd $(ROOT);								\
@@ -63,5 +74,3 @@ install::
 		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/gen.py;	\
 		rm -f $(ROOT)/gen.py.orig $(ROOT)/genpy.patch;				\
 	)
-		
-clean::
