@@ -1,21 +1,7 @@
-This should now work reasonably well?
+This works.
 
-Use an ubuntu iso. I've tried xenial, which likely means
-that wily and trusty work. Xenial takes a long time to install.
+Do a make.
 
-You'll want head of tree or get the imp_foreign_ubuntu.py for 
-"stack add pallet" because it does the right thing for the
-ubuntu-bridge pallet. 
+install the ubuntu-bridge iso.
 
-Then:
-
-create an ubuntu box.
-Add stacki to it.
-Add the Ubuntu-Server to it. 
-Add the ubuntu-bridge to it.
-stack run pallet ubuntu-bridge
-
-(You might have to set the frontend to the "ubuntu" box 
-for that to work.)
-
-Then install. should work.
+Then follow the README.md
