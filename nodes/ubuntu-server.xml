@@ -43,7 +43,8 @@ priority=critical' % httpubuntu
 	stack.api.Call("set attr", ['attr=UbuntuDistroName', 'value=%s' % release])
 	stack.api.Call("set attr", ['attr=UbuntuHttpDir', 'value=%s' % httpubuntu])
 	stack.api.Call("set attr", ['attr=UbuntuNetImagePath', 
-			'value=%s/install/filesystem.squashfs' % httpubuntu])
+			'value=http://&Kickstart_PrivateAddress;%s/install/filesystem.squashfs' 
+			% httpubuntu])
 	stack.api.Call("set attr", ['attr=UbuntAptSetupProtocol', 'value=http'])
 	stack.api.Call("set attr", ['attr=UbuntuAptSecurityPath', 'value=%s' % httpubuntu])
 	stack.api.Call("set attr", ['attr=ubuntu.netcfg', 'value=static'])
