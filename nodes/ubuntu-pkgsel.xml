@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 
-<kickstart interface="public">
+<kickstart>
 
 <description>
 Packages that need to be installed for setup for Ubuntu nodes.

@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 
-<kickstart interface="public">
+<kickstart>
 
 <description>
 Net configuration for all nodes installed with Ubuntu.
