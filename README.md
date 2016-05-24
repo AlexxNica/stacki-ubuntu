@@ -52,3 +52,8 @@ Do this:
 # stack set host boot backend action=install
 
 % Now reboot them.
+
+Please note, if your interfaces are not named "eth" something, you'll
+get your machine installed by network won't work. So yeah, do that.
+
+This is true for Trusty. I will check Wily and Xenial.
