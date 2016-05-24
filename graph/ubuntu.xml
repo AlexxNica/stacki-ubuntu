@@ -70,6 +70,7 @@
 	</edge>
 
 	<order head="server" os="ubuntu">
+		<to>ubuntu-server</to>
 	</order>
 
 	<edge from="server" os="ubuntu">
