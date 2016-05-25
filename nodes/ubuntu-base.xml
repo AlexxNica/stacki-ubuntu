@@ -22,6 +22,7 @@ All rights reserved. Rocks(r) v5.4 www.rocksclusters.org
 /usr/bin/ssh-keygen -R &hostname; -f /root/.ssh/known_hosts &gt; /dev/null 2&gt;&amp;1
 </eval>
 <debian-installer>locale string &Kickstart_Lang;</debian-installer>
+<debian-installer>add-kernel-opts string serial console=tty0 console=ttyS0,115200n8 net.ifnames=0 quiet splash</debian-installer>
 <debconf>priority select critical</debconf>
 <auto-install>enabled boolean true</auto-install>
 <keyboard-configuration>layoutcode string &Kickstart_Keyboard;</keyboard-configuration>

@@ -48,6 +48,16 @@ for iface in ifaces:
 		print '/bin/echo "  nameservers &Kickstart_PrivateDNSServers;" &gt;&gt; %s' % (file)
 		print '/bin/echo "" &gt;&gt; %s' % (file)
 </eval>
+<eval shell="/opt/stack/bin/python">
+from stack.api import Call as call
+host = '&hostname;'
+ifaces = call('list host interface', [host])
+for iface in ifaces:
+	line = 'SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", '
+	line += 'ATTR{address}=="%s", ATTR{type}=="1", ' % iface['mac']
+	line += 'KERNEL=="eth*", NAME="%s"' % iface['interface']
+	print "/bin/echo '%s' &gt;&gt; /target/lib/udev/rules.d/10-network.rules;" % line
+</eval>
 in-target /bin/cp /target/etc/network/interfaces.static /target/etc/etc/network/interfaces;
 rm -f /usr/lib/finish-install.d/55netcfg-copy-config /usr/lib/finish-install.d/50config-target-network;
 cp /target/etc/network/interfaces.static /target/etc/network/interfaces;

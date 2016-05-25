@@ -35,7 +35,7 @@ live-installer/net-image=http://&Kickstart_PrivateAddress;%s\
 /install/filesystem.squashfs ramdisk_size=150000 nousb interface=auto \
 netcfg/get_nameservers=&Kickstart_PrivateDNSServers; \
 console=tty0 console=ttyS0,115200n8 \
-priority=critical' % httpubuntu
+priority=critical net.ifnames=0' % httpubuntu
 
 	stack.api.Call("add bootaction", [ 'action=ubuntu.%s' % release, 
 			'kernel=%s' % kern, 'ramdisk=%s' % ramdisk,
@@ -48,40 +48,21 @@ priority=critical' % httpubuntu
 	stack.api.Call("set attr", ['attr=UbuntAptSetupProtocol', 'value=http'])
 	stack.api.Call("set attr", ['attr=UbuntuAptSecurityPath', 'value=%s' % httpubuntu])
 	stack.api.Call("set attr", ['attr=ubuntu.netcfg', 'value=static'])
+	stack.api.Call("set attr", ['attr=ubuntu.serial', 'value=false'])
 	stack.api.Call("set attr", ['attr=ubuntu.grub_dev', 'value=/dev/sda'])
 
-for i in res:
-	boxes = i['boxes'].split()
-	if i['os'] == 'ubuntu':
-		found = True
-		# create box, add pallets
-		if i['boxes'] == '':
-			if stack.api.Call('list box %s' % i['os']) == []:
-				print "Adding box: %s" % i['os']
-				stack.api.Call('add.box', 
-					[ i['os'], 'os=%s' % i['os']])
-				stack.api.Call('enable pallet', 
-					[ 'stacki', 'box=%s' % i['os']])
-				stack.api.Call('enable pallet', 
-					[ i['name'], 'box=%s' % i['os'],
-					'version=%s' % i['version']])
-
-
-		elif len(boxes) > 0:
-			for box in boxes:
-				if box not in [ 'ubuntu', 'ubuntu-bridge']:
-					stack.api.Call('disable pallet', 
-						[i['name'], "box=%s" % box])
-						
-		doit(i['name'],i['version'],i['os'], i['release'].lower(),i['arch'])
-	else:
-		continue
+boxes = stack.api.Call('list box')
+for b in boxes:
+	if b['os'] == 'ubuntu':
+		for i in res:
+			if i['os'] == 'ubuntu' and i['boxes'] == 'ubuntu':
+				found = True
+				doit(i['name'],i['version'],i['os'], 
+					i['release'].lower(),i['arch'])
 
 if found == False:
-	msg = '\nNo Ubuntu distribution found.\n' 
-	msg += '\nAdd an Ubuntu ISO with: \n'
-	msg += '\n"stack add pallet "some ubuntu distro".iso"\n'
-	msg += '\nThen run: "stack run pallet ubuntu-bridge | bash" again.'
+	msg = '\nUbuntu distribution not found \n' 
+	msg += '\nor Ubuntu-Server pallet not enabled.\n'
 	sys.exit(msg)
 
 </post>
