@@ -7,6 +7,8 @@ import stack.api
 import sys
 from shutil import copyfile
 import os
+from stack.bool import str2bool
+
 res = stack.api.Call('list pallet')
 found = False
 
@@ -34,28 +36,94 @@ locale=en_US.UTF-8 keyboard-configuration/layout=us \
 live-installer/net-image=http://&Kickstart_PrivateAddress;%s\
 /install/filesystem.squashfs ramdisk_size=150000 nousb interface=auto \
 netcfg/get_nameservers=&Kickstart_PrivateDNSServers; \
-console=tty0 console=ttyS0,115200n8 \
-priority=critical net.ifnames=0' % httpubuntu
+priority=critical' % httpubuntu
+
+# these change according to distro
+	stack.api.Call("set attr", ['attr=UbuntuHttpDir', 
+			'value=%s' % httpubuntu])
+	stack.api.Call("set attr", ['attr=UbuntuNetImagePath',
+			'value=http://&Kickstart_PrivateAddress;%s/install/filesystem.squashfs' 
+			% httpubuntu])
+	stack.api.Call("set attr", ['attr=UbuntAptSetupProtocol',
+			'value=http'])
+	stack.api.Call("set attr", ['attr=UbuntuAptSecurityPath',
+			'value=%s' % httpubuntu])
+	stack.api.Call("set attr", ['attr=UbuntuDistroName',
+			'value=%s' % release])
+
+# these should remain if they exist and have been set already.
+	try:	
+		x = stack.api.Call("list attr", ['attr=ubuntu.netcfg'])
+		if x == []:
+			stack.api.Call("set attr", ['attr=ubuntu.netcfg',
+				'value=static'])
+	except:
+		stack.api.Call("set attr", ['attr=ubuntu.netcfg',
+			'value=static'])
+
+	try:	
+		x = stack.api.Call("list attr", ['attr=ubuntu.serial'])
+		if x == []:
+			stack.api.Call("set attr", ['attr=ubuntu.serial',
+				'value=false'])
+	except:
+		stack.api.Call("set attr", ['attr=ubuntu.serial', 'value=false'])
+	
+	try:
+		x = stack.api.Call("list attr", ['attr=ubuntu.grub_dev'])
+		if x == []:
+			stack.api.Call("set attr", ['attr=ubuntu.grub_dev',
+				'value=/dev/sda'])
+	except:
+		stack.api.Call("set attr", ['attr=ubuntu.grub_dev',
+			'value=/dev/sda'])
+
+
+	if release != 'trusty':
+		val = "net.ifnames=0 splash"
+		stack.api.Call("set attr", ['attr=ubuntu.kernel_opts', 
+				'value=%s' % val])
+		ubuntu_args += ' net.ifnames=0'
+	else:
+		stack.api.Call("set attr", ['attr=ubuntu.kernel_opts', 
+				'value=splash'])
+# reread the attrs here
+	val = ''
+	uattrs = stack.api.Call("list attr", ['attr=ubuntu.'])
+	for ua in uattrs:
+		if ua['attr'] == 'serial':
+			if str2bool(ua['value']) == True:
+				try:
+					pattr = stack.api.Call("list attr",
+					['attr=ubuntu.kernel_opts'])[0]['value']
+					val += pattr.strip('"')
+				except:
+					continue
+				val += ' serial console=tty0 console=ttyS0,115200n8'
+				stack.api.Call("set attr", 
+					['attr=ubuntu.kernel_opts', 
+					'value=%s' % val])
+				ubuntu_args += \
+					' console=tty0 console=ttyS0,115200n8'
 
 	stack.api.Call("add bootaction", [ 'action=ubuntu.%s' % release, 
 			'kernel=%s' % kern, 'ramdisk=%s' % ramdisk,
 			'args=%s' % ubuntu_args])
-	stack.api.Call("set attr", ['attr=UbuntuDistroName', 'value=%s' % release])
-	stack.api.Call("set attr", ['attr=UbuntuHttpDir', 'value=%s' % httpubuntu])
-	stack.api.Call("set attr", ['attr=UbuntuNetImagePath', 
-			'value=http://&Kickstart_PrivateAddress;%s/install/filesystem.squashfs' 
-			% httpubuntu])
-	stack.api.Call("set attr", ['attr=UbuntAptSetupProtocol', 'value=http'])
-	stack.api.Call("set attr", ['attr=UbuntuAptSecurityPath', 'value=%s' % httpubuntu])
-	stack.api.Call("set attr", ['attr=ubuntu.netcfg', 'value=static'])
-	stack.api.Call("set attr", ['attr=ubuntu.serial', 'value=false'])
-	stack.api.Call("set attr", ['attr=ubuntu.grub_dev', 'value=/dev/sda'])
+	# fix the installaction
+	hosts = stack.api.Call("list host")
+
+	for h in hosts:
+        	s = stack.api.Call("list host attr attr=os",
+                        	[h['host'],'attr=os'])[0]
+        	if s['value'] == 'ubuntu' and h['appliance'] != 'frontend':
+			stack.api.Call("set host installaction",
+				[h['host'], "action=ubuntu.%s" % release])
 
 boxes = stack.api.Call('list box')
 for b in boxes:
 	if b['os'] == 'ubuntu':
 		for i in res:
-			if i['os'] == 'ubuntu' and i['boxes'] == 'ubuntu':
+			if i['os'] == 'ubuntu' and i['boxes'] != '':
 				found = True
 				doit(i['name'],i['version'],i['os'], 
 					i['release'].lower(),i['arch'])
@@ -64,10 +132,8 @@ if found == False:
 	msg = '\nUbuntu distribution not found \n' 
 	msg += '\nor Ubuntu-Server pallet not enabled.\n'
 	sys.exit(msg)
-
 </post>
 <post>
 systemctl restart httpd
 </post>
-</kickstart> 
-
+</kickstart>

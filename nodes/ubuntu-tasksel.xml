@@ -18,6 +18,6 @@ All rights reserved. Rocks(r) v5.4 www.rocksclusters.org
 
 
 <main>
-<tasksel>tasksel/first  select  OpenSSH server</tasksel>
+<tasksel>tasksel/first select openssh-server</tasksel>
 </main>
 </kickstart> 

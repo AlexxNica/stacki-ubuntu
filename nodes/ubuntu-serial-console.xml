@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+<description>
+User setup for all nodes installed with Ubuntu.
+</description>
+
+<si_copyright>
+(c) 2006 - 2015 StackIQ Inc.
+All rights reserved. stacki(r) v3.0 www.stacki.com
+</si_copyright>
+
+<copyright>
+Copyright (c) 2000 - 2010 The Regents of the University of California.
+All rights reserved. Rocks(r) v5.4 www.rocksclusters.org	
+</copyright>
+
+
+<late_command cond="ubuntu.serial">
+/bin/echo "GRUB_TIMEOUT=5" &gt; /target/etc/default/grub;
+/bin/echo "GRUB_DEFAULT=0" &gt;&gt; /target/etc/default/grub;
+/bin/echo 'GRUB_TERMINAL="console serial"' &gt;&gt; /target/etc/default/grub;
+/bin/echo 'GRUB_CMDLINE_LINUX="crashkernel=auto &ubuntu.kernel_opts;"' &gt;&gt; /target/etc/default/grub;
+/bin/echo 'GRUB_SERIAL_COMMAND="serial --speed=115200 --unit=0 --word=8 --parity=no --stop=1"' &gt;&gt; /target/etc/default/grub;
+in-target bash -c 'update-grub';
+</late_command>
+
+</kickstart> 

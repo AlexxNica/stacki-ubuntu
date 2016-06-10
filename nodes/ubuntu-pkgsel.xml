@@ -18,6 +18,6 @@ All rights reserved. Rocks(r) v5.4 www.rocksclusters.org
 
 
 <main>
-<pkgsel>include string curl</pkgsel>
+<pkgsel>include string curl mlocate</pkgsel>
 </main>
 </kickstart> 

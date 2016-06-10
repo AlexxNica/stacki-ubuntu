@@ -46,6 +46,10 @@
 	</order>
 
 	<order head="ubuntu-late-command">
+                <tail>ubuntu-serial-console</tail>
+        </order>
+
+	<order head="ubuntu-late-command">
                 <tail>ubuntu-grub-installer</tail>
         </order>
 
@@ -65,15 +69,18 @@
 		<to>ubuntu-tasksel</to>
 		<to>ubuntu-pkgsel</to>
 		<to>ubuntu-late-command</to>
+		<to>ubuntu-serial-console</to>
 		<to>ubuntu-grub-installer</to>
 		<to>ubuntu-finish-install</to>
 	</edge>
-
-	<order head="server" os="ubuntu">
+	<edge head="ubuntu-late-command">
+		<to>ubuntu-serial-console</to>
+	</edge>
+	<order head="server">
 		<to>ubuntu-server</to>
 	</order>
 
-	<edge from="server" os="ubuntu">
+	<edge from="server">
 		<to>ubuntu-server</to>
 	</edge>
 
