@@ -1,4 +1,4 @@
-ROLL		= ubuntu-bridge
+ROLL			= ubuntu-bridge
 COLOR			= mauve
-VERSION			= 3.1
+VERSION			= 1.0
 RELEASE			= 7.x

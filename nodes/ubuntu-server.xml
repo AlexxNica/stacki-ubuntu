@@ -2,6 +2,11 @@
 
 <kickstart>
 
+<post>
+find /export/stack/pallets/ubuntu-bridge -name 'stack-ubuntu*.rpm' \
+	-exec rpm -ivh --force {} \;
+</post>
+
 <post interpreter="/opt/stack/bin/python">
 import stack.api
 import sys
