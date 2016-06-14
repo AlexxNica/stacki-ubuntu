@@ -8,6 +8,14 @@ install a minimal version of Ubuntu Server from Trusty
 to the most recent.  Don't ask me about the desktop 
 version because I have no idea what that will do. 
 
+Requirements:
+
+This pallet.
+A license.
+An Ubuntu-Server iso from Trusty, Wily, or Xenial.
+stacki-pro pallet.
+Stacki 3.2 or greater. It won't work with 3.1 or less.
+
 Setup:
 
 % Install a license
@@ -32,7 +40,7 @@ Setup:
 
 % Add pallets to the box
 
-# stack enable pallet stacki Ubuntu-Server ubuntu-bridge box=ubuntu
+# stack enable pallet stacki stacki-pro Ubuntu-Server ubuntu-bridge box=ubuntu
 
 % Set the frontend to the ubuntu box
 
