@@ -2,8 +2,13 @@
 <graph>
 
 	<description>
-	Backend appliance graph for Stacki.
+	Ubuntu graph for Stacki Pro.
 	</description>
+
+	<si_copyright>
+	(c) 2006 - 2016 StackIQ Inc. All rights reserved.
+	Redistribution is prohibited.
+	</si_copyright>
 
 	<order head="ubuntu-base">
 		<tail>ubuntu-netcfg</tail>
@@ -57,6 +62,11 @@
 		<tail>ubuntu-finish-install</tail>
 	</order>
 
+	<order head="stacki-pro-server">
+		<to>ubuntu-server</to>
+	</order>
+
+
 	<edge from="stacki-pro-client" os="ubuntu">
 		<to>ubuntu-base</to>
 		<to>ubuntu-netcfg</to>
@@ -73,12 +83,10 @@
 		<to>ubuntu-grub-installer</to>
 		<to>ubuntu-finish-install</to>
 	</edge>
+
 	<edge head="ubuntu-late-command">
 		<to>ubuntu-serial-console</to>
 	</edge>
-	<order head="stacki-pro-server">
-		<to>ubuntu-server</to>
-	</order>
 
 	<edge from="stacki-pro-server">
 		<to>ubuntu-server</to>
