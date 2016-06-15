@@ -50,18 +50,19 @@ build::
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/list/host/profile
+	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet
+	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack
 	mkdir -p $(ROOT)/export/stack/sbin
 	mkdir -p $(ROOT)/etc/httpd/conf.d
 	$(INSTALL) -m0755 preseed.cgi $(ROOT)/export/stack/sbin
 	$(INSTALL) -m0755 https.conf $(ROOT)/etc/httpd/conf.d
 	$(INSTALL) -m0644 imp_ubuntu.py \
 		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/list/host/profile
-	cp /opt/stack/lib/python2.6/site-packages/stack/gen.py $(ROOT)/gen.py.orig
-	( 										\
-		cd $(ROOT);								\
-		diff -u gen.py.orig ../gen.py > genpy.patch;				\
-		patch gen.py.orig < genpy.patch;					\
-		$(INSTALL) -m0644 gen.py.orig \
-		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/gen.py;	\
-		rm -f $(ROOT)/gen.py.orig $(ROOT)/genpy.patch;				\
-	)
+	$(INSTALL) -m0644 ubugen.py $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack
+	$(INSTALL) -m0644 imp_foreign_ubuntu.py \
+		$(ROOT)$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet/
+	$(PYTHON) -mcompileall $(ROOT)/$(PKGROOT)
+	find $(ROOT)/$(PKGROOT) -name "*.py" | gawk        \
+        '{ print "\nRollName = \"$(ROLL)\"" >> $$1; }'
+	find $(ROOT)/$(PKGROOT)/ -name "*.py" -exec rm {} \;
+	find $(ROOT) -type d -exec chmod a+rx {} \;

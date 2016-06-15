@@ -16,6 +16,14 @@ Setup:
 % Reboot the frontend
 
 	# init 6
+	or
+	# reboot	
+
+(Ok, this instruction used to read "reboot" it doesn't because of some simple mind's
+hobgoblin. On 7.x systems, "init" and "reboot" are symlinked to systemd. So either
+command invokes the same systemd reboot method which is the only "safe" way to reboot
+a 7.x system. "reboot" and "init 6" have done the same thing for at least a decade.
+This is a function of age and habit taking a quixotic stance.)
 
 % Add an ubuntu iso.
 
