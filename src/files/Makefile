@@ -50,7 +50,6 @@ build::
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/list/host/profile
-	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet
 	mkdir -p $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack
 	mkdir -p $(ROOT)/export/stack/sbin
 	mkdir -p $(ROOT)/etc/httpd/conf.d
@@ -59,8 +58,6 @@ install::
 	$(INSTALL) -m0644 imp_ubuntu.py \
 		$(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack/commands/list/host/profile
 	$(INSTALL) -m0644 ubugen.py $(ROOT)/$(PKGROOT)/lib/python2.6/site-packages/stack
-	$(INSTALL) -m0644 imp_foreign_ubuntu.py \
-		$(ROOT)$(PKGROOT)/lib/python2.6/site-packages/stack/commands/add/pallet/
 	$(PYTHON) -mcompileall $(ROOT)/$(PKGROOT)
 	find $(ROOT)/$(PKGROOT) -name "*.py" | gawk        \
         '{ print "\nRollName = \"$(ROLL)\"" >> $$1; }'
