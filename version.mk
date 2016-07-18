@@ -1,4 +1,6 @@
-ROLL			= stacki-ubuntu-bridge
-COLOR			= mauve
+export ROLL		= stacki-ubuntu-bridge
+
 VERSION			= 1.0
-RELEASE			= 7.x
+COLOR			= mauve
+ISOSIZE			= 0
+RELEASE          	= $(shell $(STACKBUILD.ABSOLUTE)/bin/redhat-release)
