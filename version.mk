@@ -1,4 +1,4 @@
-ROLL			= ubuntu-bridge
+ROLL			= stacki-ubuntu-bridge
 COLOR			= mauve
 VERSION			= 1.0
 RELEASE			= 7.x
