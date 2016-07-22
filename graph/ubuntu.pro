@@ -63,7 +63,7 @@
 	</order>
 
 	<order head="stacki-pro-server">
-		<to>ubuntu-server</to>
+		<tail>ubuntu-server</tail>
 	</order>
 
 
