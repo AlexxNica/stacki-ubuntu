@@ -1,4 +1,5 @@
 export ROLL		= stacki-ubuntu-backend
+ROLLS.OS = ubuntu
 
 VERSION			= 1.0
 COLOR			= mauve

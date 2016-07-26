@@ -1,34 +1,27 @@
 # Requirements
 
-	- ubuntu-bridge pallet (e.g., ubuntu-bridge-1.0-7.x.x86_64.disk1.iso)
+	- stacki-ubuntu-frontend pallet
+	- stacki-ubuntu-backend pallet
 	- Ubuntu-Server iso from Trusty, Wily, or Xenial (e.g., ubuntu-16.04-server-amd64.iso)
-	- Stacki Pro license (maybe)
+	- Stacki Pro license
 	- stacki-pro pallet v3.2 or greater (e.g., stacki-pro-3.2-7.x.x86_64.disk1.iso)
 
 
 # Setup
 
-Install stacki-pro pallet
+Install the stacki-pro pallet, see instructions in the stacki-pro repository.
 
-	# stack add pallet stacki-pro-3.2-7.x.x86_64.disk1.iso
-	# stack enable pallet stacki-pro
-	# stack run pallet stacki-pro | bash
+Add stacki-ubuntu pallets:
 
-Reboot the frontend
+	# stack add pallet stacki-ubuntu-frontend-1.0-7.x.x86_64.disk1.iso
+	# stack add pallet stacki-ubuntu-backend-1.0-7.x.x86_64.disk1.iso
 
-	# init 6
-	or
-	# reboot	
+Add stacki-ubuntu-frontend for the Frontend.  The Frontend is in the
+"default" box so here the box argument is not required.
 
-(Ok, this instruction used to read "reboot" it doesn't because
-of some simple mind's hobgoblin. On 7.x systems, "init" and "reboot"
-are symlinked to systemd. So either command invokes the same systemd
-reboot method which is the only "safe" way to reboot a 7.x
-system. "reboot" and "init 6" have done the same thing for at least a
-decade.  This is a function of age and habit taking a quixotic
-stance.)
+	# stack enable pallet stacki-ubuntu-frontend
 
-Add an ubuntu iso.
+Add an Ubuntu iso.
 
 	#  stack add pallet ubuntu-16.04-server-amd64.iso
 
@@ -36,29 +29,18 @@ Add an ubuntu box (can be named anything but the "os=ubuntu" must be given)
 
 	# stack add box ubuntu os=ubuntu
 
-Install bridge pallet
+Add the Ubunto pallets to the ubunto box.
 
-	# stack add pallet ubuntu-bridge-1.0-7.x.x86_64.disk1.iso
+	# stack enable pallet stacki-ubuntu-backend Ubuntu-Server box=ubuntu
 
-Add pallets to the box
-
-	# stack enable pallet stacki stacki-pro Ubuntu-Server ubuntu-bridge box=ubuntu
-
-Set the frontend to the ubuntu box
-
-	# stack set host box frontend box=ubuntu
 
 Run the pallet.
 
-	# stack run pallet ubuntu-bridge
+	# stack run pallet ubuntu-bridge-frontend
 
 Run it for real.
 
-	# stack run pallet ubuntu-bridge | bash
-
-Set the frontend back to default box
-
-	# stack set host box frontend box=default
+	# stack run pallet ubuntu-bridge-frontend | bash
 
 Assign nodes to the ubuntu box
 
