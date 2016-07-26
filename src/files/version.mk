@@ -1,1 +1,0 @@
-NAME = stack-ubuntu

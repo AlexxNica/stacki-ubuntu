@@ -1,0 +1,26 @@
+<?xml version="1.0" standalone="no"?>
+<preseed>
+
+	<description>
+	Net configuration for all nodes installed with Ubuntu.
+	</description>
+
+	<si_copyright>
+	(c) 2006 - 2016 StackIQ Inc.
+	All rights reserved. stacki(r) v3.0 www.stacki.com
+	</si_copyright>
+
+
+
+	<main>
+		<mirror>country string manual</mirror>
+		<mirror>http/hostname string &Kickstart_PrivateAddress;</mirror>
+		<mirror>get_hostname string unassigned-hostname</mirror>
+		<mirror>http/proxy string</mirror>
+		<mirror>http/directory string &UbuntuHttpDir;</mirror>
+		<mirror>codename string &UbuntuDistroName;</mirror>
+		<mirror>suite string &UbuntuDistroName;</mirror>
+		<mirror>udeb/suite string &UbuntuDistroName;</mirror>
+	</main>
+
+</preseed> 
