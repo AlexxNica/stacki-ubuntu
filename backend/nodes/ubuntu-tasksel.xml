@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<preseed>
+<ubuntu>
 
 	<description>
 	User setup for all nodes installed with Ubuntu.
@@ -15,4 +15,4 @@
 		<tasksel>tasksel/first select openssh-server</tasksel>
 	</main>
 
-</preseed> 
+</ubuntu> 

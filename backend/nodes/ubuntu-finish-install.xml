@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<preseed>
+<ubuntu>
 
 	<description>
 	Finish setup for all nodes installed with Ubuntu.
@@ -13,4 +13,4 @@
 	<finish_install>keep-consoles boolean true</finish_install>
 	<finish_install>reboot_in_progress note</finish_install>
 
-</preseed> 
+</ubuntu> 

@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<preseed>
+<ubuntu>
 
 	<description>
 	Finish setup for all nodes installed with Ubuntu.
@@ -14,4 +14,4 @@
 	<grub_installer>only_debian boolean true</grub_installer>
 	<grub_installer>bootdev string &ubuntu.grub_dev;</grub_installer>
 
-</preseed> 
+</ubuntu> 

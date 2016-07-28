@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<preseed>
+<ubuntu>
 
 	<description>
 	User setup for all nodes installed with Ubuntu.
@@ -29,4 +29,4 @@ in-target sed -i 's/#AuthorizedKeysFile.*/AuthorizedKeysFile %h\/\.ssh\/authoriz
 ;
 </late_command>
 
-</preseed> 
+</ubuntu> 
