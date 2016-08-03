@@ -18,7 +18,7 @@ class Profile(profile.ProfileBase):
                 report = []
                 cmd = '/opt/stack/bin/stack list host xml %s | ' % client.addr
                 cmd += "/opt/stack/bin/stack list host profile os=%s | " % client.os
-                cmd += '/opt/stack/bin/stack list host installfile section=preseed.cfg'
+                cmd += '/opt/stack/bin/stack list host installfile chapter=preseed'
                 for line in os.popen(cmd).readlines():
                         report.append(line[:-1])
 

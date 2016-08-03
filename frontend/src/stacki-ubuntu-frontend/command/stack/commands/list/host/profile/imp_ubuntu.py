@@ -47,49 +47,53 @@ from stack.license import *
 
 class Implementation(stack.commands.Implementation):
 
+        def output(self, text, tag=False):
+                if tag:
+                        self.owner.addOutput(self.host, self.owner.annotate(text))
+                else:
+                        self.owner.addOutput(self.host, text)
+
 	@licenseCheck
 	def run(self, args):
 
-		host = args[0]
-		xml  = args[1]
+		host      = args[0]
+		xml       = args[1]
+                section   = args[2]
+                self.host = host
 
-		self.generator = stack.ubugen.Generator()
-		self.generator.setArch(self.owner.arch)
-		self.generator.setOS(self.owner.os)
+                if section in [ 'all' ]:
+			sections = [
+                                'main', 
+                                'packages', 
+                                'post', 
+                                'finish'
+				]
+                else:
+                        sections = [ section ]
 
+		generator = stack.ubugen.Generator()
 		if xml == None:
-			xml = self.owner.command('list.host.xml', 
-			[
-			 host,
-			 'os=%s' % self.owner.os,
-			])
-		self.runXML(xml, host)
+			xml = self.owner.command('list.host.xml', [ host, 'os=ubuntu' ])
+		generator.parse(xml)
 
-
-	def runXML(self, xml, host):
-		"""Reads the XML host profile and outputs Ubuntu
-		preseed.cfg file"""
-		
-		# This keeps everything in one command and the
-		# output can easily be parsed and split into 
-		# individual files.
-
-		list = []	
-		self.generator.parse(xml)
-		self.owner.addOutput(host, '<profile lang="preseed.cfg">\n')
-		self.get_section = ['main', 'packages', 'post', 'finish']
-		
-		for section in self.get_section:	
-			list += self.generator.generate(section,
-				annotation=self.owner.annotation)
-		else:
-			list += self.generator.generate(self.owner.section,
-					annotation=self.owner.annotation)
-		self.owner.addOutput(host,
-			self.owner.annotate('<section name="preseed.cfg">'))
-		self.owner.addOutput(host, self.owner.annotate('<![CDATA['))
-		for i in list:
-			self.owner.addOutput(host, i)
-		self.owner.addOutput(host, self.owner.annotate(']]>'))
-		self.owner.addOutput(host, self.owner.annotate('</section>'))
-		self.owner.addOutput(host, self.owner.annotate('</profile>'))
+		self.output('<profile os="ubuntu">', True)
+		self.output('<chapter name="order">', True)
+		self.output('<![CDATA[')
+                for line in generator.generate('order'):
+                        self.output(line)
+		self.output(']]>')
+		self.output('</chapter>', True)
+		self.output('<chapter name="debug">', True)
+		self.output('<![CDATA[')
+                for line in generator.generate('debug'):
+                        self.output(line)
+		self.output(']]>')
+		self.output('</debug>', True)
+		self.output('<chapter name="preseed">', True)
+		self.output('<![CDATA[')
+                for section in sections:
+                        for line in generator.generate(section, annotation=self.owner.annotation):
+                                self.output(line)
+		self.output(self.owner.annotate(']]>'))
+		self.output(self.owner.annotate('</chapter>'))
+		self.output(self.owner.annotate('</profile>'))

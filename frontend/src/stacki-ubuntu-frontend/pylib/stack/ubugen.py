@@ -104,62 +104,13 @@ import stack.cond
 import stack.gen
 	
 		
-class MainNodeFilter(stack.gen.NodeFilter):
-	"""
-	This class either accepts or reject tags
-	from the node XML files. All tags are under
-	the <main>*</main> tags.
-	Each and every one of these tags needs to
-	have a handler for them in the Generator
-	class.
-	"""
-	def acceptNode(self, node):
-
-		if node.nodeName not in [
-			'preseed',
-			'main'	# <main><*></main>
-			]:
-			return self.FILTER_SKIP
-			
-		if not self.isCorrectCond(node):
-			return self.FILTER_SKIP
-
-		return self.FILTER_ACCEPT
-
-class OtherNodeFilter(stack.gen.NodeFilter):
-	"""
-	This class accepts tags that define the
-	pre section, post section and the packages
-	section in the node XML files. The handlers
-	for these are present in the Generator class.
-	"""
-	def acceptNode(self, node):
-		if node.nodeName == 'preseed':
-			return self.FILTER_ACCEPT
-
-		if node.nodeName not in [
-			'cluster',
-			'package',
-			'patch',
-			'pre',
-			'late_command',
-			'grub_installer',
-			'finish_install',
-			'post',
-			]:
-			return self.FILTER_SKIP
-
-		if not self.isCorrectCond(node):
-			return self.FILTER_SKIP
-			
-		return self.FILTER_ACCEPT
-
 class Generator(stack.gen.Generator):
 
 	def __init__(self):
 		stack.gen.Generator.__init__(self)	
 		self.ks                 = {}
 		self.ks['order']	= []
+		self.ks['debug']	= []
 		self.ks['main']         = []
 		self.ks['packages']     = []
 		self.ks['finish']	= []
@@ -167,6 +118,12 @@ class Generator(stack.gen.Generator):
 		self.ks['post']         = []
 		self.finish_section     = 0
 		self.log = '/var/log/stack-install.log'
+
+                # We could set these elsewhere but this is the current
+                # definition of the Ubuntu Generator.
+
+                self.setOS('ubuntu')
+		self.setArch('x86_64')
 	
 	##
 	## Parsing Section
@@ -176,36 +133,38 @@ class Generator(stack.gen.Generator):
 		import cStringIO
 		xml_buf = cStringIO.StringIO(xml_string)
 		doc = xml.dom.ext.reader.Sax2.FromXmlStream(xml_buf)
-		filter = MainNodeFilter(self.attrs)
+		filter = stack.gen.MainNodeFilter(self.attrs)
 		iter = doc.createTreeWalker(doc, filter.SHOW_ELEMENT,
 			filter, 0)
 		node = iter.nextNode()
 		while node:
-
-			if node.nodeName == 'preseed':
-				self.handle_preseed(node)
+			if node.nodeName == 'profile':
+				self.handle_profile(node)
 			elif node.nodeName == 'main':
-				#print ('printing node name in main while 2 %s' ,node.nodeName)
 				child = iter.firstChild()
 				while child:
 					self.handle_mainChild(child)
 					child = iter.nextSibling()
 			node = iter.nextNode()
 
-		filter = OtherNodeFilter(self.attrs)
-		iter = doc.createTreeWalker(doc, filter.SHOW_ELEMENT,
-			filter, 0)
+		filter = stack.gen.OtherNodeFilter(self.attrs)
+		iter = doc.createTreeWalker(doc, filter.SHOW_ELEMENT, filter, 0)
 		node = iter.nextNode()
 		while node:
-			if node.nodeName != 'preseed':
+			if node.nodeName != 'profile':
 				self.order(node)
-				eval('self.handle_%s(node)' % (node.nodeName))
+                                try:
+                                        fn = eval('self.handle_%s' % node.nodeName)
+                                except AttributeError:
+                                        fn = None
+                                if fn:
+                                        fn(node)
 			node = iter.nextNode()
 
 
-	# <preseed>
+	# <profile>
 	
-	def handle_preseed(self, node):
+	def handle_profile(self, node):
 		# pull out the attr to handle generic conditionals
 		# this replaces the old arch/os logic but still
 		# supports the old syntax
