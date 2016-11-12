@@ -41,59 +41,118 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # @SI_Copyright@
 
-import stack.commands
-import stack.ubugen
+import string
+from xml.sax import saxutils
+from xml.sax import handler
+from xml.sax import make_parser
 from stack.license import *
+import stack.commands
+import stack.ubuntu.gen
+
+
+class ProfileHandler(handler.ContentHandler,
+                     handler.DTDHandler,
+                     handler.EntityResolver,
+                     handler.ErrorHandler):
+
+	def __init__(self):
+		handler.ContentHandler.__init__(self)
+                self.recording = False
+                self.text      = ''
+                self.chapters  = {}
+                self.chapter   = None
+
+	def startElement(self, name, attrs):
+                if name == 'chapter':
+                        self.chapter   = self.chapters[attrs.get('name')] = []
+                        self.recording = True
+
+	def endElement(self, name):
+                if self.recording:
+                        self.chapter.append(self.text)
+                        self.text = ''
+
+                if name == 'chapter':
+                        self.recording = False
+
+	def characters(self, s):
+                if self.recording:
+                        self.text += s
+
+        def getChapter(self, chapter):
+                doc = []
+                if chapter in self.chapters:
+                        for text in self.chapters[chapter]:
+                        	doc.append(text.strip())
+                return doc
+
 
 class Implementation(stack.commands.Implementation):
 
-        def output(self, text, tag=False):
-                if tag:
-                        self.owner.addOutput(self.host, self.owner.annotate(text))
-                else:
-                        self.owner.addOutput(self.host, text)
 
 	@licenseCheck
 	def run(self, args):
 
-		host      = args[0]
-		xml       = args[1]
-                section   = args[2]
-                self.host = host
+                host        = args[0]
+                xmlinput    = args[1]
+                profileType = args[2]
+                isDocument  = args[3]
+                profile     = []
+		generator   = stack.ubuntu.gen.Generator()
 
-                if section in [ 'all' ]:
-			sections = [
-                                'main', 
-                                'packages', 
-                                'post', 
-                                'finish'
-				]
-                else:
-                        sections = [ section ]
+                generator.setProfileType(profileType)
+		generator.parse(xmlinput)
 
-		generator = stack.ubugen.Generator()
-		if xml == None:
-			xml = self.owner.command('list.host.xml', [ host, 'os=ubuntu' ])
-		generator.parse(xml)
-
-		self.output('<profile os="ubuntu">', True)
-		self.output('<chapter name="order">', True)
-		self.output('<![CDATA[')
+                profile.append('<?xml version="1.0" standalone="no"?>')
+                profile.append('<profile-%s os="ubuntu">' % generator.getProfileType())
+		profile.append('<chapter name="meta">')
+                profile.append('\t<section name="order">')
                 for line in generator.generate('order'):
-                        self.output(line)
-		self.output(']]>')
-		self.output('</chapter>', True)
-		self.output('<chapter name="debug">', True)
-		self.output('<![CDATA[')
+	                profile.append('%s' % line)
+                profile.append('\t</section>')
+                profile.append('\t<section name="debug">')
                 for line in generator.generate('debug'):
-                        self.output(line)
-		self.output(']]>')
-		self.output('</debug>', True)
-		self.output('<chapter name="preseed">', True)
-		self.output('<![CDATA[')
-                for section in sections:
-                        for line in generator.generate(section, annotation=self.owner.annotation):
-                                self.output(line)
-		self.output(self.owner.annotate(']]>'))
-		self.output(self.owner.annotate('</chapter>'))
-		self.output(self.owner.annotate('</profile>'))
+                        profile.append(line)
+                profile.append('\t</section>')
+		profile.append('</chapter>')
+
+                if generator.getProfileType() == 'native':
+                        profile.append('<chapter name="preseed">')
+                        for section in [ 'main',
+                                         'packages',
+                                         'post',
+                                         'finish']:
+                                profile.append('\t<section name="%s">' % section)
+                                for line in generator.generate(section):
+                                        profile.append(line)
+                                profile.append('\t</section>')
+                        profile.append('</chapter>')
+
+                elif generator.getProfileType() == 'shell':
+                        profile.append('<chapter name="bash">')
+                        profile.append('#! /bin/bash')
+                        for section in [ 'packages',
+                                         'post',
+					 'boot' ]:
+                                profile.append('\t<section name="%s">' % section)
+                                for line in generator.generate(section):
+                                        profile.append(line)
+                                profile.append('\t</section>')
+                        profile.append('</chapter>')
+
+
+                profile.append('</profile-%s>' % generator.getProfileType())
+
+                if not isDocument:
+			parser  = make_parser()
+                        handler = ProfileHandler()
+			parser.setContentHandler(handler)
+                        for line in profile:
+                                parser.feed('%s\n' % line)
+                        profile = handler.document()
+
+                for line in profile:
+                        self.owner.addOutput(host, line)
+
+
+RollName = "stacki"

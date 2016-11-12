@@ -24,7 +24,7 @@ found = False
 def doit(name,version,boxos,release,arch):
 
 	rootdir = '/export/stack/pallets'
-	baseubuntu = "/".join([rootdir, name, version, boxos, arch])
+	baseubuntu = "/".join([rootdir, name, version, release, boxos, arch])
 	netinstall = 'install/netboot/ubuntu-installer/amd64'
 	initrd = '/'.join([baseubuntu,netinstall,'initrd.gz'])
 	vmlinuz = '/'.join([baseubuntu,netinstall,'linux'])
@@ -39,8 +39,8 @@ def doit(name,version,boxos,release,arch):
 	ramdisk = 'initrd.%s' % release
 
 	ubuntu_args='install auto=true \
-url=http://&Kickstart_PrivateAddress;/install/sbin/preseed.cgi?arch=x86_64\
-&amp;np=2&amp;os=ubuntu ksdevice=bootif biosdevname=0 hostname=unassigned \
+url=http://&Kickstart_PrivateAddress;/install/sbin/profile.cgi \
+ksdevice=bootif biosdevname=0 hostname=unassigned \
 locale=en_US.UTF-8 keyboard-configuration/layout=us \
 live-installer/net-image=http://&Kickstart_PrivateAddress;%s\
 /install/filesystem.squashfs ramdisk_size=150000 nousb interface=auto \
@@ -132,10 +132,10 @@ boxes = stack.api.Call('list box')
 for b in boxes:
 	if b['os'] == 'ubuntu':
 		for i in res:
-			if i['os'] == 'ubuntu' and i['boxes'] != '':
+			if 'Ubuntu' in i['name'] and i['boxes'] != '':
 				found = True
 				doit(i['name'],i['version'],i['os'], 
-					i['release'].lower(),i['arch'])
+					i['release'],i['arch'])
 
 if found == False:
 	msg = '\nUbuntu distribution not found \n' 
