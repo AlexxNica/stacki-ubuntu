@@ -145,14 +145,13 @@ class Implementation(stack.commands.Implementation):
 
                 if not isDocument:
 			parser  = make_parser()
-                        handler = ProfileHandler()
+			handler = ProfileHandler()
+
 			parser.setContentHandler(handler)
                         for line in profile:
                                 parser.feed('%s\n' % line)
-                        profile = handler.document()
+
+                        profile = handler.getChapter('preseed')
 
                 for line in profile:
                         self.owner.addOutput(host, line)
-
-
-RollName = "stacki"

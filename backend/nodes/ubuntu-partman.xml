@@ -20,7 +20,7 @@
 		<partman-lvm>device_remove_lvm_span boolean true</partman-lvm>
 		<partman-lvm>confirm boolean true</partman-lvm>
 		<partman-md>device_remove_md boolean true</partman-md>
-		<partman-auto>
+		<partman-auto>\
 expert_recipe string 						\
         root :: 						\
                 16000 10 16300 ext4 				\

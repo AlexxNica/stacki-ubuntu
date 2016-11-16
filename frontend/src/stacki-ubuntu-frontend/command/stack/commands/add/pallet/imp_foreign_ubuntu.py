@@ -97,7 +97,7 @@ class Implementation(stack.commands.Implementation):
 			raise CommandError(self, 'Unknown Ubuntu on media')
 
 		OS = 'ubuntu'
-		roll_dir = os.path.join(prefix, self.name, self.vers, self.release, OS, self.arch)
+		roll_dir = os.path.join(prefix, self.name, self.vers, self.release.lower(), OS, self.arch)
 		destdir = roll_dir
 
 		if clean and os.path.exists(roll_dir):

@@ -39,7 +39,7 @@ def doit(name,version,boxos,release,arch):
 	ramdisk = 'initrd.%s' % release
 
 	ubuntu_args='install auto=true \
-url=http://&Kickstart_PrivateAddress;/install/sbin/profile.cgi \
+url=http://&Kickstart_PrivateAddress;/install/sbin/profile.cgi?os=ubuntu&amp;arch=x86_64&amp;np=2 \
 ksdevice=bootif biosdevname=0 hostname=unassigned \
 locale=en_US.UTF-8 keyboard-configuration/layout=us \
 live-installer/net-image=http://&Kickstart_PrivateAddress;%s\
@@ -135,7 +135,7 @@ for b in boxes:
 			if 'Ubuntu' in i['name'] and i['boxes'] != '':
 				found = True
 				doit(i['name'],i['version'],i['os'], 
-					i['release'],i['arch'])
+					i['release'].lower(),i['arch'])
 
 if found == False:
 	msg = '\nUbuntu distribution not found \n' 
