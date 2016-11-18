@@ -16,7 +16,7 @@ class Profile(profile.ProfileBase):
         def main(self, client):
 
                 report = []
-		cmd = '/opt/stack/bin/stack list host profile backend-0-3 document=false'
+		cmd = '/opt/stack/bin/stack list host profile %s document=false' % client.addr
                 for line in os.popen(cmd).readlines():
                         report.append(line[:-1])
 
