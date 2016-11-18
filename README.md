@@ -67,11 +67,11 @@ be reset.
 
 Reset your machines:
 
-stack disable pallet Ubuntu-Server box=ubuntu-box
-stack enable pallet Ubuntu-Server release=Wily box=ubuntu-box
-stack run pallet ubuntu-bridge | bash
-stack set host installaction backend action=ubuntu.wily
-stack set host boot backend action=install
+	# stack disable pallet Ubuntu-Server box=ubuntu-box
+	# stack enable pallet Ubuntu-Server release=Wily box=ubuntu-box
+	# stack run pallet stacki-ubuntu-frontend | bash
+	# stack set host installaction backend action=ubuntu.wily
+	# stack set host boot backend action=install
 
 Then reboot.
 
