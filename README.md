@@ -2,7 +2,7 @@
 
 	- stacki-ubuntu-frontend pallet
 	- stacki-ubuntu-backend pallet
-	- Ubuntu-Server iso from Trusty, Wily, or Xenial (e.g., ubuntu-16.04-server-amd64.iso)
+	- Ubuntu-Server iso from Trusty, Wily, Xenial, or Yakkety (e.g., ubuntu-16.04-server-amd64.iso) (you can do multiple versions)
 	- Stacki Pro license
 	- stacki-pro pallet v3.2 or greater (e.g., stacki-pro-3.2-7.x.x86_64.disk1.iso)
 
@@ -20,27 +20,24 @@ Add stacki-ubuntu-frontend for the Frontend.  The Frontend is in the
 "default" box so here the box argument is not required.
 
 	# stack enable pallet stacki-ubuntu-frontend
+	# stack run pallet stacki-ubuntu-frontend | bash
 
 Add an Ubuntu iso.
 
 	#  stack add pallet ubuntu-16.04-server-amd64.iso
 
-Add an ubuntu box (can be named anything but the "os=ubuntu" must be given)
+Add an Ubuntu box (can be named anything but the "os=ubuntu" must be given)
 
-	# stack add box ubuntu os=ubuntu
+	# stack add box ubuntu-xenial os=ubuntu
 
 Add the Ubunto pallets to the ubunto box.
 
-	# stack enable pallet stacki-ubuntu-backend Ubuntu-Server box=ubuntu
+	# stack enable pallet stacki-ubuntu-backend Ubuntu-Server box=ubuntu-xenial
 
 
-Run the pallet.
+Run the pallet again. (Trust me on this.)
 
-	# stack run pallet ubuntu-bridge-frontend
-
-Run it for real.
-
-	# stack run pallet ubuntu-bridge-frontend | bash
+	# stack run pallet stacki-ubuntu-frontend | bash
 
 Assign nodes to the ubuntu box
 
@@ -99,8 +96,9 @@ Here is the Phase 3 list in no particular order:
 - parallel formatting
 - using the tracker
 - putting in https!
-- more partitioning, drop in an expert partition, 
-- don’t overwrite data disks 
+- more partitioning, drop in an expert partition
+- make nukedisks and controllers work
+- don’t overwrite data disks (lazyformat)
 - convert database partition setting to ubuntu partition
 - move partitioning to kickstart.
 - what’s the kickstart preseed interplay
@@ -108,4 +106,5 @@ Here is the Phase 3 list in no particular order:
 - preseed to properly do the number of cpus
 - Oh and some other stuff.
 - We could integrate this will salt, shouldn't be hard.
+- Fix ssh funniness on reinstall.
 
