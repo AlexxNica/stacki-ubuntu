@@ -1,14 +1,13 @@
-<?xml version="1.0" standalone="no"?>
-<ubuntu>
+<stack:ubuntu>
 
-	<description>
+	<stack:description>
 	User setup for all nodes installed with Ubuntu.
-	</description>
+	</stack:description>
 
-	<si_copyright>
+	<stack:copyright>
 	(c) 2006 - 2016 StackIQ Inc.
 	All rights reserved. stacki(r) v3.0 www.stacki.com
-	</si_copyright>
+	</stack:copyright>
 
 
 <late_command cond="ubuntu.serial">
@@ -20,4 +19,4 @@
 in-target bash -c 'update-grub';
 </late_command>
 
-</ubuntu> 
+</stack:ubuntu> 

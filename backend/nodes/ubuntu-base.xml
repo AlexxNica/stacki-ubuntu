@@ -1,19 +1,18 @@
-<?xml version="1.0" standalone="no"?>
-<ubuntu>
+<stack:ubuntu>
 
-	<description>
+	<stack:description>
 	Base class for all nodes installed with Ubuntu.
-	</description>
+	</stack:description>
 
-	<si_copyright>
+	<stack:si_copyright>
 	(c) 2006 - 2016 StackIQ Inc.
 	All rights reserved. stacki(r) v3.0 www.stacki.com
-	</si_copyright>
+	</stack:si_copyright>
 
 	<main>
-		<eval>
+		<stack:eval>
 		/usr/bin/ssh-keygen -R &hostname; -f /root/.ssh/known_hosts &gt; /dev/null 2&gt;&amp;1
-		</eval>
+		</stack:eval>
 		<debian-installer>locale string &Kickstart_Lang;</debian-installer>
 		<debian-installer>add-kernel-opts string &ubuntu.kernel_opts;</debian-installer>
 		<debconf>priority select critical</debconf>
@@ -25,4 +24,4 @@
 		<live-installer>net-image string &UbuntuNetImagePath;</live-installer>
 	</main>
 
-</ubuntu> 
+</stack:ubuntu> 

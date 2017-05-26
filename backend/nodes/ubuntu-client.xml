@@ -1,16 +1,15 @@
-<?xml version="1.0" standalone="no"?>
-<ubuntu>
+<stack:ubuntu>
 
-	<description>
+	<stack:description>
 	The 'client node' in the graph.
 
 	This file is used as a connection point for other XML configuration nodes.
-	</description>
+	</stack:description>
 
-	<si_copyright>
+	<stack:copyright>
 	(c) 2006 - 2016 StackIQ Inc.
 	All rights reserved. stacki(r) v3.0 www.stacki.com
-	</si_copyright>
+	</stack:copyright>
 
 	<main>
 		<reboot/>
@@ -47,4 +46,4 @@ gpgcheck=0
 </pre>
 
 
-</ubuntu> 
+</stack:ubuntu> 

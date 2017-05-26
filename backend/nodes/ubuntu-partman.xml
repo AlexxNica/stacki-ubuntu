@@ -1,14 +1,13 @@
-<?xml version="1.0" standalone="no"?>
-<ubuntu>
+<stack:ubuntu>
 
-	<description>
+	<stack:description>
 	Partition config for all nodes installed with Ubuntu.
-	</description>
+	</stack:description>
 
-	<si_copyright>
+	<stack:copyright>
 	(c) 2006 - 2016 StackIQ Inc.
 	All rights reserved. stacki(r) v3.0 www.stacki.com
-	</si_copyright>
+	</stack:copyright>
 
 
 	<main>
@@ -56,4 +55,4 @@ expert_recipe string 						\
 		<partman-lvm>confirm_nooverwrite boolean true</partman-lvm>
 	</main>
 
-</ubuntu> 
+</stack:ubuntu> 

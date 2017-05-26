@@ -1,14 +1,13 @@
-<?xml version="1.0" standalone="no"?>
-<ubuntu>
+<stack:ubuntu>
 
-	<description>
+	<stack:description>
 	Net configuration for all nodes installed with Ubuntu.
-	</description>
+	</stack:description>
 
-	<si_copyright>
+	<stack:copyright>
 	(c) 2006 - 2016 StackIQ Inc.
 	All rights reserved. stacki(r) v3.0 www.stacki.com
-	</si_copyright>
+	</stack:copyright>
 
 
 	<main>
@@ -22,7 +21,7 @@
 /bin/echo "auto lo" &gt; /target/etc/network/interfaces.static;
 /bin/echo "iface lo inet loopback" &gt;&gt; /target/etc/network/interfaces.static;
 /bin/echo "" &gt;&gt; /target/etc/network/interfaces.static;
-<eval shell="/opt/stack/bin/python">
+<stack:eval shell="/opt/stack/bin/python">
 import stack.api
 host = "&hostname;"
 ifaces = stack.api.Call('list host interface', [host])
@@ -41,8 +40,8 @@ for iface in ifaces:
 		print '/bin/echo "  gateway %s" &gt;&gt; %s' % (gw,file)
 		print '/bin/echo "  nameservers &Kickstart_PrivateDNSServers;" &gt;&gt; %s' % (file)
 		print '/bin/echo "" &gt;&gt; %s' % (file)
-</eval>
-<eval shell="/opt/stack/bin/python">
+</stack:eval>
+<stack:eval shell="/opt/stack/bin/python">
 from stack.api import Call as call
 host = '&hostname;'
 ifaces = call('list host interface', [host])
@@ -51,11 +50,11 @@ for iface in ifaces:
 	line += 'ATTR{address}=="%s", ATTR{type}=="1", ' % iface['mac']
 	line += 'KERNEL=="eth*", NAME="%s"' % iface['interface']
 	print "/bin/echo '%s' &gt;&gt; /target/lib/udev/rules.d/10-network.rules;" % line
-</eval>
+</stack:eval>
 in-target /bin/cp /target/etc/network/interfaces.static /target/etc/etc/network/interfaces;
 rm -f /usr/lib/finish-install.d/55netcfg-copy-config /usr/lib/finish-install.d/50config-target-network;
 cp /target/etc/network/interfaces.static /target/etc/network/interfaces;
 ;
 </late_command>
 
-</ubuntu> 
+</stack:ubuntu> 

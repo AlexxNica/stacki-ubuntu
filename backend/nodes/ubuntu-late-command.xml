@@ -1,14 +1,13 @@
-<?xml version="1.0" standalone="no"?>
-<ubuntu>
+<stack:ubuntu>
 
-	<description>
+	<stack:description>
 	User setup for all nodes installed with Ubuntu.
-	</description>
+	</stack:description>
 
-	<si_copyright>
+	<stack:copyright>
 	(c) 2006 - 2016 StackIQ Inc.
 	All rights reserved. stacki(r) v3.0 www.stacki.com
-	</si_copyright>
+	</stack:copyright>
 
 
 
@@ -17,7 +16,7 @@ in-target /usr/bin/curl -s -k -o /target/dev/null/ https://&Kickstart_PrivateAdd
 in-target sed -i 's/PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config;
 in-target sed -i 's/#AuthorizedKeysFile.*/AuthorizedKeysFile %h\/\.ssh\/authorized_keys/g' /etc/ssh/sshd_config;
 /bin/mkdir -p /target/root/.ssh;
-/bin/echo -ne "<eval shell="sh">awk 'NR > 1 { print prev } { prev=$0 } END { ORS=""; print }' /root/.ssh/id_rsa.pub</eval>" &gt;&gt; /target/root/.ssh/authorized_keys;
+/bin/echo -ne "<stack:eval shell="sh">awk 'NR > 1 { print prev } { prev=$0 } END { ORS=""; print }' /root/.ssh/id_rsa.pub</stack:eval>" &gt;&gt; /target/root/.ssh/authorized_keys;
 </late_command>
 
 <late_command cond="&ubuntu.serial; == True">
@@ -25,8 +24,8 @@ in-target /usr/bin/curl -s -k -o /target/dev/null/ https://&Kickstart_PrivateAdd
 in-target sed -i 's/PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config;
 in-target sed -i 's/#AuthorizedKeysFile.*/AuthorizedKeysFile %h\/\.ssh\/authorized_keys/g' /etc/ssh/sshd_config;
 /bin/mkdir -p /target/root/.ssh;
-/bin/echo -ne "<eval shell="sh">awk 'NR > 1 { print prev } { prev=$0 } END { ORS=""; print }' /root/.ssh/id_rsa.pub</eval>" &gt;&gt; /target/root/.ssh/authorized_keys;
+/bin/echo -ne "<stack:eval shell="sh">awk 'NR > 1 { print prev } { prev=$0 } END { ORS=""; print }' /root/.ssh/id_rsa.pub</stack:eval>" &gt;&gt; /target/root/.ssh/authorized_keys;
 ;
 </late_command>
 
-</ubuntu> 
+</stack:ubuntu> 
