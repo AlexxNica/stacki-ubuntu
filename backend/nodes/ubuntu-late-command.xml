@@ -51,6 +51,5 @@ in-target sed -i 's/stki /\n/g' /etc/ssh/ssh_host_ed25519_key;
 	{ ORS=""; print }'</stack:eval>" \
 	&gt; /target/etc/ssh/ssh_host_ed25519_key.pub;
 /bin/chmod 0444 /target/etc/ssh/ssh_host_ed25519_key.pub;
-;
 </late_command>
 </stack:ubuntu> 

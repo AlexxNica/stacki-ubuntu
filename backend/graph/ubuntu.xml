@@ -19,10 +19,10 @@
 	</order>
 
         <order head="ubuntu-mirror">
-                <tail>ubuntu-aptsetup</tail>
+                <tail>ubuntu-apt-setup</tail>
         </order>
 
-        <order head="ubuntu-aptsetup">
+        <order head="ubuntu-apt-setup">
                 <tail>ubuntu-clock-setup</tail>
         </order>
 
@@ -79,7 +79,7 @@
 		<to>ubuntu-finish-install</to>
 	</edge>
 
-	<edge from="ubuntu-late-command">
+	<edge cond="ubuntu.serial" from="ubuntu-late-command">
 		<to>ubuntu-serial-console</to>
 	</edge>
 
