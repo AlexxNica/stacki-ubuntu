@@ -19,7 +19,7 @@
 		<partman-lvm>device_remove_lvm_span boolean true</partman-lvm>
 		<partman-lvm>confirm boolean true</partman-lvm>
 		<partman-md>device_remove_md boolean true</partman-md>
-		<partman-auto>expert_recipe string		\
+		<partman-auto cond="nukedisks">expert_recipe string		\
                 root ::						\
                 16384 16384 16384 ext4 				\
                         $primary{ } $bootable{ } 		\
@@ -40,6 +40,31 @@
 		16384 10240 -1 xfs				\
 			$primary{ } 				\
 			method{ format } format{ } 		\
+			use_filesystem{ } filesystem{ xfs } 	\
+			mountpoint{ /state/partition1 } 	\
+		.
+		</partman-auto>
+		<partman-auto cond="not nukedisks">expert_recipe string		\
+                root ::						\
+                16384 16384 16384 ext4 				\
+                        $primary{ } $bootable{ } 		\
+                        method{ format } format{ } 		\
+                        use_filesystem{ } filesystem{ ext4 } 	\
+                        mountpoint{ / } 			\
+                . 						\
+                8192 8192 8192 linux-swap 			\
+                        $primary{ } 				\
+                        method{ swap } format{ } 		\
+                . 						\
+                16384 16384 16384 xfs 				\
+                        $primary{ } 				\
+                        method{ format } format{ } 		\
+                        use_filesystem{ } filesystem{ xfs } 	\
+                        mountpoint{ /var } 			\
+		.						\
+		16384 10240 -1 xfs				\
+			$primary{ } 				\
+			method{ keep }				\
 			use_filesystem{ } filesystem{ xfs } 	\
 			mountpoint{ /state/partition1 } 	\
 		.
