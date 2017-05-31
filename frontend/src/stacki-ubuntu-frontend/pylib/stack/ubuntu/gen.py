@@ -117,7 +117,6 @@ class Generator(stack.gen.Generator):
 		self.setOS('ubuntu')
 		self.setArch('x86_64')
 		
-		self.doc                = None
 		self.mainSection        = stack.gen.ProfileSection()
 		self.postSection        = stack.gen.ProfileSection()
 		self.finishSection      = stack.gen.ProfileSection()
@@ -138,10 +137,10 @@ class Generator(stack.gen.Generator):
 	def parse(self, xml_string):
 		import cStringIO
 		xml_buf = cStringIO.StringIO(xml_string)
-		self.doc = xml.dom.ext.reader.Sax2.FromXmlStream(xml_buf)
+		doc = xml.dom.ext.reader.Sax2.FromXmlStream(xml_buf)
 		
 		filter = NodeFilter(self.attrs)
-		iter   = self.doc.createTreeWalker(self.doc, filter.SHOW_ELEMENT, filter, 0)
+		iter   = doc.createTreeWalker(doc, filter.SHOW_ELEMENT, filter, 0)
 		node = iter.nextNode()
 		
 		while node:
@@ -167,9 +166,11 @@ class Generator(stack.gen.Generator):
 	def handle_mainChild(self, node):
 		nodefile = self.getAttr(node, 'file')
 		if 'tasksel' in node.nodeName:	
-			self.mainSection.append('%s %s' % (node.nodeName, self.getChildText(node)), nodefile)
+			self.mainSection.append('%s %s' % \
+				(node.nodeName, self.getChildText(node)), nodefile)
 		else:
-			self.mainSection.append('d-i %s/%s' % (node.nodeName, self.getChildText(node)), nodefile)
+			self.mainSection.append('d-i %s/%s' % \
+				(node.nodeName, self.getChildText(node)), nodefile)
 	
 	def handle_late_command(self, node):
 		nodefile = self.getAttr(node, 'file')
@@ -181,8 +182,10 @@ class Generator(stack.gen.Generator):
 			if not command:
 				continue
 			
-			if not self.postSection.generate():
-				self.postSection.append('d-i preseed/%s string %s;\\' % (node.nodeName.strip(), command), nodefile)
+			if not self.postSection.snippets:
+				self.postSection.append(
+					'd-i preseed/%s string %s;\\' % \
+					(node.nodeName.strip(), command), nodefile)
 			elif idx < len(commands) - 2:
 				self.postSection.append('%s;\\' % command, nodefile)
 			else:
@@ -190,11 +193,13 @@ class Generator(stack.gen.Generator):
 
 	def handle_grub_installer(self, node):
 		nodefile = self.getAttr(node, 'file')
-		self.finishSection.append('d-i grub-installer/%s' % self.getChildText(node), nodefile)
+		self.finishSection.append('d-i grub-installer/%s' % \
+			self.getChildText(node), nodefile)
 
 	def handle_finish_install(self, node):
 		nodefile = self.getAttr(node, 'file')
-		self.finishSection.append('d-i finish-install/%s' % self.getChildText(node), nodefile)
+		self.finishSection.append('d-i finish-install/%s' % \
+			self.getChildText(node), nodefile)
 
 	def handle_pre(self, node):
 		pass
