@@ -12,33 +12,32 @@
 
 	<main>
 		<partman-auto>init_automatically_partition select entire_disk</partman-auto>
-		<partman-auto>disk string /dev/sda</partman-auto>
+		<partman-auto>disk string &ubuntu.grub_dev;</partman-auto>
 		<partman-auto>method string regular</partman-auto>
 		<partman-auto>purge_lvm_from_device boolean true</partman-auto>
 		<partman-lvm>device_remove_lvm boolean true</partman-lvm>
 		<partman-lvm>device_remove_lvm_span boolean true</partman-lvm>
 		<partman-lvm>confirm boolean true</partman-lvm>
 		<partman-md>device_remove_md boolean true</partman-md>
-		<partman-auto>\
-expert_recipe string 						\
-        root :: 						\
-                16000 10 16300 ext4 				\
+		<partman-auto>expert_recipe string		\
+                root ::						\
+                16384 16384 16384 ext4 				\
                         $primary{ } $bootable{ } 		\
                         method{ format } format{ } 		\
                         use_filesystem{ } filesystem{ ext4 } 	\
                         mountpoint{ / } 			\
                 . 						\
-                8192 16384 8241 linux-swap 			\
+                8192 8192 8192 linux-swap 			\
                         $primary{ } 				\
                         method{ swap } format{ } 		\
                 . 						\
-                16000 20 16300 xfs 				\
+                16384 16384 16384 xfs 				\
                         $primary{ } 				\
                         method{ format } format{ } 		\
                         use_filesystem{ } filesystem{ xfs } 	\
                         mountpoint{ /var } 			\
 		.						\
-		10 30 -1 xfs					\
+		16384 10240 -1 xfs				\
 			$primary{ } 				\
 			method{ format } format{ } 		\
 			use_filesystem{ } filesystem{ xfs } 	\

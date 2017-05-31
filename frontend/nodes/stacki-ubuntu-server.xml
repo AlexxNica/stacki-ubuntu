@@ -98,9 +98,9 @@ priority=critical' % httpubuntu
 				'value=splash'])
 # reread the attrs here
 	val = ''
-	uattrs = stack.api.Call("list attr", ['attr=ubuntu.'])
+	uattrs = stack.api.Call("list attr", ['attr=ubuntu*'])
 	for ua in uattrs:
-		if ua['attr'] == 'serial':
+		if ua['attr'] == 'ubuntu.serial':
 			if str2bool(ua['value']) == True:
 				try:
 					pattr = stack.api.Call("list attr",

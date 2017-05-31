@@ -3,13 +3,9 @@
 	- stacki-ubuntu-frontend pallet
 	- stacki-ubuntu-backend pallet
 	- Ubuntu-Server iso from Trusty, Wily, Xenial, or Yakkety (e.g., ubuntu-16.04-server-amd64.iso) (you can do multiple versions)
-	- Stacki Pro license
-	- stacki-pro pallet v3.2 or greater (e.g., stacki-pro-3.2-7.x.x86_64.disk1.iso)
 
 
 # Setup
-
-Install the stacki-pro pallet, see instructions in the stacki-pro repository.
 
 Add stacki-ubuntu pallets:
 
@@ -30,7 +26,7 @@ Add an Ubuntu box (can be named anything but the "os=ubuntu" must be given)
 
 	# stack add box ubuntu-xenial os=ubuntu
 
-Add the Ubunto pallets to the ubunto box.
+Add the Ubuntu pallets to the ubuntu box.
 
 	# stack enable pallet stacki-ubuntu-backend Ubuntu-Server box=ubuntu-xenial
 
