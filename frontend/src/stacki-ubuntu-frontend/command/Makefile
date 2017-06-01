@@ -18,7 +18,6 @@ install::
 	find $(ROOT)/$(PY.STACK)/stack -name "*.py" | gawk		\
 		'{ print "\nRollName = \"$(ROLL)\"" >> $$1; }'  
 	$(PYTHON) -mcompileall $(ROOT)/$(PY.STACK)
-	find $(ROOT)/$(PY.STACK)/ -name "*.py" -exec rm {} \;
 	find $(ROOT) -type d -exec chmod a+rx {} \;
 
 clean::
