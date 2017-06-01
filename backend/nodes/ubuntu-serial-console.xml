@@ -10,7 +10,7 @@
 	</stack:copyright>
 
 
-<late_command stack:cond="&ubuntu.serial;">
+<late_command cond="&ubuntu.serial;">
 /bin/echo "GRUB_TIMEOUT=5" &gt; /target/etc/default/grub;
 /bin/echo "GRUB_DEFAULT=0" &gt;&gt; /target/etc/default/grub;
 /bin/echo 'GRUB_TERMINAL="console serial"' &gt;&gt; /target/etc/default/grub;

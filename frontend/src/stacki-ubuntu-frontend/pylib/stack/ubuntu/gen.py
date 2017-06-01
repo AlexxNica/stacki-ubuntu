@@ -96,13 +96,24 @@ import cStringIO
 import string
 import xml.dom.NodeFilter
 import xml.dom.ext.reader.Sax2
+import stack.cond
 import stack.gen
 
-class StackNodeFilter(stack.gen.StackNodeFilter):
-	pass
-
 class NodeFilter(stack.gen.NodeFilter):
+
 	def acceptNode(self, node):
+		if not node.attributes:
+			return self.FILTER_ACCEPT
+		
+		cond    = self.getAttr(node, 'cond')
+		arch    = self.getAttr(node, 'arch')
+		osname  = self.getAttr(node, 'os')
+		release = self.getAttr(node, 'release')
+		expr    = stack.cond.CreateCondExpr(arch, osname, release, cond)
+
+		if not stack.cond.EvalCondExpr(expr, self.attrs):
+			return self.FILTER_SKIP
+
 		return self.FILTER_ACCEPT
 		
 class Generator(stack.gen.Generator):
@@ -134,7 +145,7 @@ class Generator(stack.gen.Generator):
 		xml_buf = cStringIO.StringIO(xml_string)
 		doc = xml.dom.ext.reader.Sax2.FromXmlStream(xml_buf)
 		
-		filter = NodeFilter(self.attrs)
+		filter = NodeFilter(self.attrs, None)
 		iter   = doc.createTreeWalker(doc, filter.SHOW_ELEMENT, filter, 0)
 		node = iter.nextNode()
 		

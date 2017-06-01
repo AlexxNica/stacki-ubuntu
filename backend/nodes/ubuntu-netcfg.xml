@@ -17,7 +17,7 @@
 		<netcfg>get_domain string unassigned-domain</netcfg>
 	</main>
 
-<late_command stack:cond="'&ubuntu.netcfg;' == 'static'">
+<late_command cond="'&ubuntu.netcfg;' == 'static'">
 /bin/echo "auto lo" &gt; /target/etc/network/interfaces.static;
 /bin/echo "iface lo inet loopback" &gt;&gt; /target/etc/network/interfaces.static;
 /bin/echo "" &gt;&gt; /target/etc/network/interfaces.static;
