@@ -94,13 +94,8 @@
 
 import cStringIO
 import string
-import types
-import sys
-import os
-import time
 import xml.dom.NodeFilter
 import xml.dom.ext.reader.Sax2
-import stack.cond
 import stack.gen
 
 class StackNodeFilter(stack.gen.StackNodeFilter):
