@@ -6,11 +6,16 @@
 
 
 # Setup
+Download stacki-ubuntu-pallets
+
+
+wget 
+wget 
 
 Add stacki-ubuntu pallets:
 
-	# stack add pallet stacki-ubuntu-frontend-1.0-7.x.x86_64.disk1.iso
-	# stack add pallet stacki-ubuntu-backend-1.0-7.x.x86_64.disk1.iso
+	# stack add pallet stacki-ubuntu-frontend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso
+	# stack add pallet stacki-ubuntu-backend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso
 
 Add stacki-ubuntu-frontend for the Frontend.  The Frontend is in the
 "default" box so here the box argument is not required.

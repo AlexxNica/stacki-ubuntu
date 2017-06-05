@@ -11,7 +11,7 @@
 
 
 	<main>
-		<tasksel>tasksel/first select openssh-server</tasksel>
+		<tasksel>tasksel/first select standard openssh-server</tasksel>
 	</main>
 
 </stack:ubuntu> 

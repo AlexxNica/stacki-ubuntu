@@ -15,8 +15,42 @@ in-target /usr/bin/curl -s -k -o /target/dev/null/ https://&Kickstart_PrivateAdd
 in-target sed -i 's/PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config;
 in-target sed -i 's/#AuthorizedKeysFile.*/AuthorizedKeysFile %h\/\.ssh\/authorized_keys/g' /etc/ssh/sshd_config;
 /bin/mkdir -p /target/root/.ssh;
-/bin/echo -ne "<stack:eval shell="sh">awk 'NR > 1 { print prev } { prev=$0 } END { ORS=""; print }' /root/.ssh/id_rsa.pub</stack:eval>" &gt;&gt; /target/root/.ssh/authorized_keys;
+/bin/echo -ne "<stack:eval shell="sh">awk 'NR > 1 { print prev } { prev=$0 } \
+	END { ORS=""; print }' /root/.ssh/id_rsa.pub</stack:eval>" \
+	&gt;&gt; /target/root/.ssh/authorized_keys;
+/bin/echo -ne "<stack:eval shell="sh">/opt/stack/sbin/read-ssh-private-key RSA \
+	2> /dev/null | sed 's/$/stki \\/g'</stack:eval>" \
+	&gt; /target/etc/ssh/ssh_host_rsa_key;
+in-target sed -i 's/stki /\n/g' /etc/ssh/ssh_host_rsa_key;
+/bin/chmod 0400 /target/etc/ssh/ssh_host_rsa_key;
+/bin/echo -ne "<stack:eval shell="sh">cat /etc/ssh/ssh_host_rsa_key.pub \
+	2> /dev/null | awk 'NR > 1 { print prev } { prev=$0 } \
+	END { ORS=""; print }'</stack:eval>" \
+	&gt; /target/etc/ssh/ssh_host_rsa_key.pub;
+/bin/chmod 0444 /target/etc/ssh/ssh_host_rsa_key.pub;
+
+/bin/echo -ne "<stack:eval shell="sh">/opt/stack/sbin/read-ssh-private-key ECDSA \
+	2> /dev/null \ | sed 's/$/stki\\/g'</stack:eval>" \
+	&gt; /target/etc/ssh/ssh_host_ecdsa_key;
+in-target sed -i 's/stki /\n/g' /etc/ssh/ssh_host_ecdsa_key;
+/bin/chmod 0400 /target/etc/ssh/ssh_host_ecdsa_key;
+
+/bin/echo -ne "<stack:eval shell="sh">cat /etc/ssh/ssh_host_ecdsa_key.pub \
+	2> /dev/null | awk 'NR > 1 { print prev } { prev=$0 } END \
+	{ ORS=""; print }'</stack:eval>" \
+	&gt; /target/etc/ssh/ssh_host_ecdsa_key.pub;
+/bin/chmod 0444 /target/etc/ssh/ssh_host_ecdsa_key.pub;
+
+/bin/echo -ne "<stack:eval shell="sh">/opt/stack/sbin/read-ssh-private-key ED25519 \
+	2> /dev/null | sed 's/$/stki\\/g'</stack:eval>" \
+	&gt; /target/etc/ssh/ssh_host_ed25519_key;
+in-target sed -i 's/stki /\n/g' /etc/ssh/ssh_host_ed25519_key;
+/bin/chmod 0400 /target/etc/ssh/ssh_host_ed25519_key;
+/bin/echo -ne "<stack:eval shell="sh">cat /etc/ssh/ssh_host_ed25519_key.pub \
+	2> /dev/null | awk 'NR > 1 { print prev } { prev=$0 } END \
+	{ ORS=""; print }'</stack:eval>" \
+	&gt; /target/etc/ssh/ssh_host_ed25519_key.pub;
+/bin/chmod 0444 /target/etc/ssh/ssh_host_ed25519_key.pub;
 ;
 </late_command>
-
 </stack:ubuntu> 
