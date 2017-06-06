@@ -52,7 +52,7 @@ Run the frontend pallet again. (Trust me on this.)
 
 Assign nodes to the ubuntu box
 
-	# stack set host box backend box=ubuntu
+	# stack set host box backend box=ubuntu-xenial
 
 Set the installaction
 
