@@ -1,4 +1,4 @@
-# Yes Ubuntu!
+# Yes! Ubuntu!
 
 You asked, we listened, and now we're releasing Stacki Ubuntu into the open source Stacki tree. You can now automatically install Ubuntu via a preseed network install to backend machines from a Stacki frontend. The only thing you have to do is prep your frontend.
 
@@ -12,11 +12,13 @@ In the meantime, to get you started:
 	- stacki-ubuntu-backend pallet
 	- Ubuntu-Server iso from Trusty, Wily, Xenial, or Yakkety (e.g., ubuntu-16.04-server-amd64.iso) (you can do multiple versions)
 
-# Setup
+## Setup
 Download stacki-ubuntu-pallets
 
+```
 wget https://s3.amazonaws.com/stacki/public/pallets/4.0/open-source/stacki-ubuntu-frontend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso 
 wget https://s3.amazonaws.com/stacki/public/pallets/4.0/open-source/stacki-ubuntu-backend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso
+```
 
 You have to add and run the stacki-ubuntu-frontend pallet before adding the stacki-ubuntu-backend pallet or the Ubunto-Server iso. 
 So let's do that:
@@ -63,13 +65,13 @@ Install
 
 Reboot the backend nodes
 
-# What you get
+## What you get
 
 Right now all you get is a machine with one iterface plumbed and default partitions of /, /var, swap, and /state/partition1. To get a different partitioning scheme, you'll have to use a cart and use a replace-ubuntu-partman.xml and put your own partitioning in. The "nukedisks" flag is recognized for the default partitions.
 
 The next release will do partitioning and plumb all networks if set up correctly in the database. Let us know what else you would like to see. 
 
-# Changing the distribution.
+## Changing the distribution.
 
 If you want a different Ubuntu Distribution, just add the new iso 
 as a pallet. 
@@ -98,7 +100,7 @@ do:
 And set those for the hosts you want.
 You'll have to set the installaction too.
 
-# The Future
+## The Future
 
 A bunch of stuff should be done to make Ubuntu install with all 
 the perks and superdoublechocolateawesomeness we use when 
