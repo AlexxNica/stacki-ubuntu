@@ -118,3 +118,19 @@ Here is the Phase 3 list in no particular order:
 - Preseed to properly do the number of cpus
 - Discovery mode.
 - XML file fixes to obviate preseed issues.
+
+### Questions you're going to ask that I have no idea about:
+You: Does this work with Ubuntu Desktop? 
+Me: I have no idea. Try it. See what happens.
+
+You: Does this work with Debian?
+Me: Not yet. Shouldn't be hard. Maybe soon. Maybe not.
+
+You: Does this work on my Raspberry Pi?
+Me: Really? We just released this. Mabye soon. Maybe not.
+
+You: Can I mirror the entire Ubuntu repo?
+Me: Yes. It's a horror and you have to have a big disk. If you read this far, ask on the Stacki Slack channel, and I'll give you an answer/rant. You don't get one without the other.
+
+You: Can you add X so I can do Y because it would be awesome to show my Zs? 
+Me: Can/do you pay us for professional services? Then, no. 
