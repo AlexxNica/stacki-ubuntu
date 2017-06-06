@@ -7,7 +7,7 @@ It's not as full-featured as what we do with CentOS/RHEL variants, but we will b
 In the meantime, to get you started:
 
 # Requirements
-- A Stacki frontend.
+- A Stacki frontend with Stacki 4.0. It likely won't work on anything less than 4.0.
 - stacki-ubuntu-frontend pallet
 - stacki-ubuntu-backend pallet
 - Ubuntu-Server iso from Trusty, Wily, Xenial, or Yakkety (e.g., ubuntu-16.04-server-amd64.iso) (you can do multiple versions)
