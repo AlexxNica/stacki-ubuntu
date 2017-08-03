@@ -1,0 +1,96 @@
+# @SI_Copyright@
+# @SI_Copyright@
+
+YUMLIST = MegaCLI storcli hpssacli 	\
+		stack-pylib		\
+		foundation-python	\
+		foundation-parted	\
+		foundation-python-xml	\
+		stack-command
+
+#		libcurl.x86_64 curl.x86_64 \
+#		python-pycurl.x86_64 \
+#		vim-minimal nss openssl-libs.x86_64 \
+#
+DEBLIST = curl libcurl python-pycurl vim libssl \
+	librtmp libnettle
+
+LOCALYUMLIST = stacki-ubuntu-frontend-command \
+		stacki-ubuntu-frontend-pylib
+
+RPMLOC = $(wildcard ../common/RPMS/*.rpm ./RPMS/*.rpm)
+TEMPDIR := $(shell mktemp -d)
+RPMLOC += $(shell repoquery --location $(YUMLIST))
+
+PALLET_PATCH_DIR = /opt/stack/Ubuntu-pallet-patches/$(UBUNTU_VERSION)
+
+localrepo:
+	mkdir -p $(CURDIR)/localrepo
+	ln -fs $(REDHAT.RPMS) $(CURDIR)/localrepo 
+	createrepo $(CURDIR)/localrepo
+	@echo -e "[localdir] \n\
+name=local \n\
+baseurl=file://$(CURDIR)/localrepo\n\
+assumeyes=1 \n\
+gpgcheck=0 \n\
+enabled=0" > localdir.repo
+localrepo:
+RPMLOC += $(shell repoquery --repoid=localdir -c localdir.repo --location $(LOCALYUMLIST))
+
+dirs:
+	@mkdir -p $(CURDIR)/ubuntu-stacki
+
+rpminst: localrepo
+	rpm --dbpath $(TEMPDIR) -ivh --nodeps --force --badreloc \
+		--relocate=/=$(CURDIR)/ubuntu-stacki $(RPMLOC)
+	rm -rf $(TEMPDIR)
+
+debinst:
+	( \
+	pwd; \
+	for f in $(DEBLIST); do \
+	find /export/stack/pallets/Ubuntu-Server -name $$f*amd64.deb \
+		-exec cp {} ../common/PKGS \; ; \
+	done; \
+	for f in `ls ../common/PKGS`; do \
+		dpkg-deb -x ../common/PKGS/$$f ../common/DEBS; \
+	done \
+	)
+	cp -a ../common/DEBS/* $(CURDIR)/ubuntu-stacki;
+
+
+#build: ubuntu-stacki.img stacki-initrd.img
+build:: dirs rpminst debinst
+	@echo "Building ubuntu-stacki.img"
+	# SymLink /usr/bin/python to foundation-python
+	mkdir -p $(CURDIR)/ubuntu-stacki/usr/bin
+	ln -fs /opt/stack/bin/python $(CURDIR)/ubuntu-stacki/usr/bin/python
+	# Patch the ubuntu-stacki image
+	-(cd ../common/ubuntu-stacki.img-patches && \
+		(find -L . -type f  | cpio -pudv ../../$(UBUNTU_VERSION)/ubuntu-stacki/) )
+#	-(cd ubuntu-stacki.img-patches && (find . -type f | cpio -pudv ../ubuntu-stacki/) )
+	$(EXTRACT) initrd.xenial | ( cd ubuntu-stacki; cpio -iudcm ) 
+	(				\
+		cd ubuntu-stacki;	\
+		find . | cpio -oc | gzip -c - > ../ubuntu-stacki.img; \
+	)
+
+#build: ubuntu-stacki.img stacki-initrd.img
+
+
+install::
+	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p $(ROOT)/$(PALLET_PATCH_DIR)
+	$(INSTALL) -m0644 linux $(ROOT)/$(PKGROOT)/ubuntu-linux-$(UBUNTU_VERSION)-$(ARCH)
+	$(INSTALL) -m0644 ubuntu-stacki.img $(ROOT)/$(PKGROOT)/initrd.$(UBUNTU_VERSION)
+#	$(INSTALL) -m0644 ubuntu-stacki.img $(ROOT)/$(PKGROOT)/ubuntu-initrd-$(UBUNTU_VERSION)-$(ARCH)
+	# Copy over patch files
+#	cd Ubuntu-pallet-patches && (find . -type f | cpio -pudv $(ROOT)/$(PALLET_PATCH_DIR))
+	$(INSTALL) -m0644 ubuntu-stacki.img $(ROOT)/$(PALLET_PATCH_DIR)/boot/x86_64/ubuntu-stacki.img
+
+clean::
+	rm -rf $(CURDIR)/localrepo
+	rm -rf $(CURDIR)/localdir.repo
+	rm -rf $(CURDIR)/stacki
+	rm -rf $(CURDIR)/ubuntu-stacki.img
+	rm -rf $(CURDIR)/ubuntu-stacki
