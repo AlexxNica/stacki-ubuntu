@@ -127,6 +127,11 @@ class Generator(stack.gen.Generator):
 		self.postSection        = stack.gen.ProfileSection()
 		self.finishSection      = stack.gen.ProfileSection()
 
+                self.tags        = {}
+                self.doc         = None
+                self.pruneList   = []
+                self.replaceList = []
+
 	##
 	## Render xml for debugging purposes
 	##
@@ -210,8 +215,33 @@ class Generator(stack.gen.Generator):
 	def handle_pre(self, node):
 		pass
 
-	def handle_post(self, node):
-		pass
+#	def handle_stack_post(self, node):
+#		pass
+
+        def handle_stack_post(self, node):
+                if self.getProfileType() == 'shell':
+                        nodefile        = self.getAttr(node, 'file')
+                        interpreter     = self.getAttr(node, 'interpreter')
+                        arg             = self.getAttr(node, 'arg')
+                        section         = self.getChildText(node)
+                        tmp             = tempfile.mktemp()
+
+                        if interpreter:
+                                script  = 'cat > %s << "__EOF_%s__"\n' % (tmp, tmp)
+                                script += '#! %s\n\n' % interpreter
+                                script += section
+                                script += '__EOF_%s__\n\n' % tmp
+                                script += 'chmod +x %s\n' % tmp
+                                script += '%s\n' % tmp
+                        elif arg and '--nochroot' in arg:
+                                # just ignore all the --nochroot stuff
+                                script = ''
+                        else:
+                                script = section
+
+                        self.postSection.append(script, nodefile)
+                else:
+                        self.pruneList.append(node)
 
 	def handle_package(self, node):
 		pass
