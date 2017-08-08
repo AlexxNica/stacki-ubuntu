@@ -50,14 +50,13 @@ build: dirs rpminst debinst
 	$(EXTRACT) initrd.gz | ( cd ubuntu-stacki; cpio -iudcm ) 
 	(				\
 		cd ubuntu-stacki;	\
-		rm -f lib/libuuid* lib/libblkid* lib/libnl* lib/libgcrypt* lib/libgpg-error.so.0; \
 		find . | cpio -oc | gzip -c - > ../ubuntu-stacki.img; \
 	)
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
-	$(INSTALL) -m0644 linux $(ROOT)/$(PKGROOT)/vmlinuz-$(shell echo $(UBUNTU_PRODUCT) | tr A-Z a-z)-$(IMAGE_VERSION)-$(ARCH)
-	$(INSTALL) -m0644 ubuntu-stacki.img $(ROOT)/$(PKGROOT)/initrd-$(shell echo $(UBUNTU_PRODUCT) | tr A-Z a-z)-$(IMAGE_VERSION)-$(ARCH)
+	$(INSTALL) -m0755 linux $(ROOT)/$(PKGROOT)/vmlinuz-ubuntu-$(shell echo $(UBUNTU_PRODUCT) | tr A-Z a-z)-$(IMAGE_VERSION)-$(ARCH)
+	$(INSTALL) -m0644 ubuntu-stacki.img $(ROOT)/$(PKGROOT)/initrd-ubuntu-$(shell echo $(UBUNTU_PRODUCT) | tr A-Z a-z)-$(IMAGE_VERSION)-$(ARCH)
 
 clean::
 	rm -rf $(CURDIR)/localrepo

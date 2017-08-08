@@ -1,2 +1,4 @@
 *.deb filter=lfs diff=lfs merge=lfs -text
 *.udeb filter=lfs diff=lfs merge=lfs -text
+initrd.gz filter=lfs diff=lfs merge=lfs -text
+linux filter=lfs diff=lfs merge=lfs -text

@@ -29,15 +29,15 @@ def doit(name,version,boxos,release,arch):
 	netinstall = 'install/netboot/ubuntu-installer/amd64'
 	initrd = '/'.join([baseubuntu,netinstall,'initrd.gz'])
 	vmlinuz = '/'.join([baseubuntu,netinstall,'linux'])
-	tftp_initrd = '/'.join(['/tftpboot/pxelinux', 'initrd.%s' % release])
+	tftp_initrd = '/'.join(['/tftpboot/pxelinux', 'initrd-ubuntu-%s' % release])
 	tftp_vmlinuz = '/'.join(['/tftpboot/pxelinux', 'vmlinuz.%s' % release])
 	copyfile(initrd, tftp_initrd)
 	copyfile(vmlinuz, tftp_vmlinuz)
 	os.chmod(tftp_vmlinuz, 0755)
 	httpubuntu = "/install/%s" % '/'.join(baseubuntu.split('/')[3:])
 
-	kern = 'vmlinuz.%s' % release
-	ramdisk = 'initrd.%s' % release
+	kern = 'vmlinuz-ubuntu-%s-%s-%s' % (release,version,arch)
+	ramdisk = 'initrd-ubuntu-%s-%s-%s' % (release,version,arch)
 
 	ubuntu_args='install auto=true \
 url=http://&Kickstart_PrivateAddress;/install/sbin/profile.cgi?os=ubuntu&amp;arch=x86_64&amp;np=2 \
@@ -115,36 +115,25 @@ priority=critical' % httpubuntu
 					'value=%s' % val])
 				ubuntu_args += \
 					' console=tty0 console=ttyS0,115200n8'
-
-	stack.api.Call("add bootaction", [ 'action=ubuntu.%s' % release, 
+	
+	stack.api.Call("add bootaction", [ 'action=ubuntu-%s-%s' % (release,version),
 			'kernel=%s' % kern, 'ramdisk=%s' % ramdisk,
 			'args=%s' % ubuntu_args])
-	# fix the installaction
-	hosts = stack.api.Call("list host")
+	print("add bootaction", [ 'action=ubuntu-%s-%s' % (release,version),
+			'kernel=%s' % kern, 'ramdisk=%s' % ramdisk,
+			'args=%s' % ubuntu_args])
 
-	for h in hosts:
-        	s = stack.api.Call("list host attr attr=os",
-                        	[h['host'],'attr=os'])[0]
-        	if s['value'] == 'ubuntu' and h['appliance'] != 'frontend':
-			stack.api.Call("set host installaction",
-				[h['host'], "action=ubuntu.%s" % release])
-
-boxes = stack.api.Call('list box')
-for b in boxes:
-	if b['os'] == 'ubuntu':
-		for i in res:
-			if 'Ubuntu' in i['name'] and i['boxes'] != '':
-				found = True
-				doit(i['name'],i['version'],i['os'], 
-					i['release'].lower(),i['arch'])
-
-if found == False:
-	msg = '\nUbuntu distribution not found \n' 
-	msg += '\nor Ubuntu-Server pallet not enabled.\n'
-	sys.exit(msg)
+pallets = stack.api.Call('list pallet')
+for p in pallets:
+	if p['os'] == 'ubuntu':
+		if 'Ubuntu' in p['name']:
+			doit(p['name'],p['version'],p['os'], 
+					p['release'].lower(),p['arch'])
 </post>
 
 <post>
+cp /opt/stack/images/initrd-ubuntu* /tftpboot/pxelinux/
+cp /opt/stack/images/vmlinuz-ubuntu* /tftpboot/pxelinux/
 systemctl restart httpd
 </post>
 

@@ -39,18 +39,13 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # @SI_Copyright@
 
-ROLLROOT	= ../..
+ROLLROOT	= ../../../../
 
 include $(STACKBUILD)/etc/CCRules.mk
 
-SRCDIRS = xenial/16.04.1 xenial/16.04.2 xenial/16.04.3
+EXTRACT := gunzip -c 
 
-build:
-	for i in $(SRCDIRS); do \
-		make -C $$i $@; \
-	done
+include ../../common/images.mk
 
-install clean nuke::
-	for i in $(SRCDIRS); do \
-		make -C $$i $@; \
-	done
+install:: 
+SHA = $(shell sha1sum ubuntu-stacki.img | awk '{print "SHA1 "$$1;}')
