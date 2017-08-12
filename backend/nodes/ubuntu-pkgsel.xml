@@ -11,7 +11,7 @@
 
 
 	<main>
-		<pkgsel>include string curl mlocate man</pkgsel>
+		<pkgsel>include string curl mlocate man parted util-linux</pkgsel>
 	</main>
 
 </stack:ubuntu> 
