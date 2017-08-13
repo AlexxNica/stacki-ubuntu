@@ -11,6 +11,9 @@
 
 
 	<main>
+		<partman-early_command cond="not nukedisks">
+			/opt/stack/bin/python get_etc_fstab.py
+		</partman-early_command>
 		<partman-auto>init_automatically_partition select entire_disk</partman-auto>
 		<partman-auto>disk string &ubuntu.grub_dev;</partman-auto>
 		<partman-auto>method string regular</partman-auto>
@@ -21,7 +24,7 @@
 		<partman-md>device_remove_md boolean true</partman-md>
 		<partman-auto> expert_recipe string		\
 		<stack:eval shell="/bin/sh">
-		/opt/stack/bin/stack report host partition sd-stacki-131 bootDisk=True nukedisks=&nukedisks;
+		/opt/stack/bin/stack report host partition &hostname; bootDisk=True nukedisks=&nukedisks;
 		</stack:eval>
 		</partman-auto>
 		<partman>choose_partition select finish</partman>

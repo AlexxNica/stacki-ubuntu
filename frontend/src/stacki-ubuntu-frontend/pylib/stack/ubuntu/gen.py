@@ -174,11 +174,20 @@ class Generator(stack.gen.Generator):
 				fn(node)
 			node = iter.nextNode()
 
+	def handle_early_command(self, node):
+		nodefile = self.getAttr(node, 'file')
+		txt = self.getChildText(node).strip()
+		name = node.nodeName.split('-')
+		self.mainSection.append('d-i %s/early_command string %s' % \
+			(name[0], txt))
+
 	def handle_mainChild(self, node):
 		nodefile = self.getAttr(node, 'file')
 		if 'tasksel' in node.nodeName:	
 			self.mainSection.append('%s %s' % \
 				(node.nodeName, self.getChildText(node)), nodefile)
+		elif 'early_command' in node.nodeName:
+			self.handle_early_command(node)
 		else:
 			self.mainSection.append('d-i %s/%s' % \
 				(node.nodeName, self.getChildText(node)), nodefile)

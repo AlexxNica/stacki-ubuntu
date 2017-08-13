@@ -108,15 +108,25 @@ class Command(stack.commands.Command,
 	# Generate late commands to partition non-boot disks
 	def generate_late_cmd(self, partition_dict, nukedisks):
 		late_cmd = []
+
+		#
+		# If we are not wiping the disk, copy the contents of
+		# /etc/fstab from previous install into current
+		# /etc/fstab (Except for /, /boot, /var)
+		#
+		if not nukedisks:
+			late_cmd.append('cat /tmp/old_etc_fstab.txt >> ' \
+				'/target/etc/fstab;\\')
+			return late_cmd
+
 		for disk in partition_dict:
 			partition_list = partition_dict[disk]
 			sorted_partition_list = \
 				sorted(partition_list, key=lambda k: k['partid'])
 			
 			# Wipe partition table if nukedisks=true
-			if nukedisks:
-				late_cmd.append('in-target /sbin/parted -s' \
-					' /dev/%s mklabel gpt;\\' % disk)
+			late_cmd.append('in-target /sbin/parted -s' \
+				' /dev/%s mklabel gpt;\\' % disk)
 			start = 0
 			start_str = '0%'
 
