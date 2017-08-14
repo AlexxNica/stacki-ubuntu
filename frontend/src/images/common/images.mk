@@ -46,7 +46,7 @@ build: dirs rpminst debinst
 	ln -fs /usr/bin/vim.tiny $(CURDIR)/ubuntu-stacki/usr/bin/vi
 	# Patch the ubuntu-stacki image
 	-(cd ../../common/ubuntu-stacki.img-patches && \
-		(find . -type f  | cpio -pud ../../$(UBUNTU_VERSION)/ubuntu-stacki/) )
+		(find . -type f  | cpio -pud ../../$(UBUNTU_VERSION)/$(RELEASE)/ubuntu-stacki/) )
 	$(EXTRACT) initrd.gz | ( cd ubuntu-stacki; cpio -iudcm ) 
 	(				\
 		cd ubuntu-stacki;	\
