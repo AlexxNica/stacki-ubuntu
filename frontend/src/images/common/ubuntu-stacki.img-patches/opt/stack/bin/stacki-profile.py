@@ -28,7 +28,7 @@ p = subprocess.Popen(linkcmd, stdout = subprocess.PIPE)
 interface_number = 0
 
 curlcmd = [ '/usr/bin/curl', '--local-port', '1-100',
-	'--output', '/tmp/stacki-profile.xml' ]
+	'-o', '/tmp/stacki-profile.xml' ]
 
 o, e = p.communicate()
 for line in o.split('\n'):
@@ -58,7 +58,7 @@ for line in o.split('\n'):
 
                         interface_number += 1
 
-curlcmd.append('--insecure')
+curlcmd.append('-k')
 
 #
 # get the number of CPUs
@@ -71,9 +71,15 @@ for line in file.readlines():
 		numcpus += 1
 file.close()
 
-request = 'https://%s/install/sbin/profile.cgi?os=ubuntu&arch=x86_64&np=%d' % \
-	('10.8.1.1', numcpus)
+request = os.environ['url']
+#request = 'https://%s/install/sbin/profile.cgi?os=ubuntu&arch=x86_64&np=%d&profile=full' % \
+#	(os.environ['gateway'], numcpus)
+request += "&profile=full"
 curlcmd.append(request)
 
-subprocess.call(curlcmd, stdout=open('/dev/null'), stderr=open('/dev/null'))
+out = open("/tmp/stdout.txt","w") 
+err = open("/tmp/stderr.txt","w")
 
+subprocess.call(curlcmd, stdout=out, stderr=err)
+out.close()
+err.close()

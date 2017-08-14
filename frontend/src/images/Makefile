@@ -43,7 +43,7 @@ ROLLROOT	= ../..
 
 include $(STACKBUILD)/etc/CCRules.mk
 
-SRCDIRS = xenial
+SRCDIRS = xenial/16.04.2 xenial/16.04.3
 
 build:
 	for i in $(SRCDIRS); do \

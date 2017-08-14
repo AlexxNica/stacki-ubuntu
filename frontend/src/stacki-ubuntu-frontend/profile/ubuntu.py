@@ -10,13 +10,25 @@ import string
 import syslog
 import stack.api
 import profile
+import cgi
 
 class Profile(profile.ProfileBase):
 
         def main(self, client):
+		self.form = cgi.FieldStorage()
+		try:
+			profiletype = self.form['profile'].value
+		except:
+			profiletype = None
 
                 report = []
-		cmd = '/opt/stack/bin/stack list host profile %s chapter=preseed document=false' % client.addr
+		if profiletype == 'full':
+			cmd = '/opt/stack/bin/stack list host xml '
+			cmd += '%s' % client.addr
+		else:
+			cmd = '/opt/stack/bin/stack list host profile ' 
+			cmd += '%s chapter=preseed document=false' % client.addr
+
                 for line in os.popen(cmd).readlines():
                         report.append(line[:-1])
 

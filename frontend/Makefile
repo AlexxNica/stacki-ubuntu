@@ -9,3 +9,6 @@
 ROLLROOT = .
 
 include $(PALLETBUILD)/etc/CCRolls.mk
+
+bootstrap::
+	yum -y install ./RPMS/dpkg-1.17.27-1.el7.x86_64.rpm
