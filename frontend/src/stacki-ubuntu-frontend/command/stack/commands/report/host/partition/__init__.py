@@ -116,7 +116,7 @@ class Command(stack.commands.Command,
 		#
 		if not nukedisks:
 			late_cmd.append('cat /tmp/old_etc_fstab.txt >> ' \
-				'/target/etc/fstab;\\')
+				'/target/etc/fstab')
 			return late_cmd
 
 		for disk in partition_dict:
@@ -126,7 +126,7 @@ class Command(stack.commands.Command,
 			
 			# Wipe partition table if nukedisks=true
 			late_cmd.append('in-target /sbin/parted -s' \
-				' /dev/%s mklabel gpt;\\' % disk)
+				' /dev/%s mklabel gpt' % disk)
 			start = 0
 			start_str = '0%'
 
@@ -149,19 +149,19 @@ class Command(stack.commands.Command,
 					end_str = '100%'
 
 				late_cmd.append('in-target /sbin/parted -s ' \
-					'/dev/%s mkpart %s %s %s;\\' %       \
+					'/dev/%s mkpart %s %s %s' %       \
                         		(device, primary, start_str, end_str))
 
 				late_cmd.append('in-target export DEVNAME=' \
 					'`/bin/lsblk /dev/sdb -ro NAME | '  \
-					'/usr/bin/tail -1`;\\')
+					'/usr/bin/tail -1`')
 				late_cmd.append('in-target mkfs -t %s ' \
-					'/dev/$DEVNAME;\\' % fstype)
-				late_cmd.append('in-target /bin/mkdir -p %s;\\' \
+					'/dev/$DEVNAME' % fstype)
+				late_cmd.append('in-target /bin/mkdir -p %s' \
 					% mntpt)
 				late_cmd.append('in-target /bin/echo ' 		 \
 					'"/dev/$DEVNAME %s %s defaults 0 0" >> ' \
-					'/target/etc/fstab;\\' % 		 \
+					'/target/etc/fstab' % 		 \
 					(mntpt, fstype))
 				start = end
 				start_str = end_str
@@ -201,4 +201,4 @@ class Command(stack.commands.Command,
 		else:
 			part_dict.pop(self.bootdisk, None)
 			late_cmds = self.generate_late_cmd(part_dict, nukedisks)
-			print('\n'.join(late_cmds))
+			print(';'.join(late_cmds) + ';')
