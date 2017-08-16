@@ -152,10 +152,10 @@ class Command(stack.commands.Command,
 					'/dev/%s mkpart %s %s %s' %       \
                         		(device, primary, start_str, end_str))
 
-				late_cmd.append('in-target export DEVNAME=' \
-					'`/bin/lsblk /dev/sdb -ro NAME | '  \
-					'/usr/bin/tail -1`')
-				late_cmd.append('in-target mkfs -t %s ' \
+				late_cmd.append('export DEVNAME=' \
+					'`/target/bin/lsblk /dev/sdb -ro NAME | '  \
+					'/target/usr/bin/tail -1`')
+				late_cmd.append('in-target /sbin/mkfs -t %s ' \
 					'/dev/$DEVNAME' % fstype)
 				late_cmd.append('in-target /bin/mkdir -p %s' \
 					% mntpt)
