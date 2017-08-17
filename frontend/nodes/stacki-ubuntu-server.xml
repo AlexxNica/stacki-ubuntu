@@ -6,10 +6,11 @@
 	All rights reserved. stacki(r) v3.0 www.stacki.com
 	</si_copyright>
 
-	<package>stacki-ubuntu-frontend-command</package>
-	<package>stacki-ubuntu-frontend-files</package>
-	<package>stacki-ubuntu-frontend-profile</package>
-	<package>stacki-ubuntu-frontend-pylib</package>
+<package>stacki-ubuntu-frontend-command</package>
+<package>stacki-ubuntu-frontend-files</package>
+<package>stacki-ubuntu-frontend-profile</package>
+<package>stacki-ubuntu-frontend-pylib</package>
+<package>stacki-ubuntu-frontend-images</package>
 
 <post interpreter="/opt/stack/bin/python">
 import stack.api

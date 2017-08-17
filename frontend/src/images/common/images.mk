@@ -46,7 +46,7 @@ build: dirs rpminst debinst
 	ln -fs /usr/bin/vim.tiny $(CURDIR)/ubuntu-stacki/usr/bin/vi
 	# Patch the ubuntu-stacki image
 	-(cd ../../common/ubuntu-stacki.img-patches && \
-		(find . -type f  | cpio -pud ../../$(UBUNTU_VERSION)/$(RELEASE)/ubuntu-stacki/) )
+		(find . -type f  | cpio -pud ../../$(UBUNTU_PRODUCT)/$(IMAGE_VERSION)/ubuntu-stacki/) )
 	$(EXTRACT) initrd.gz | ( cd ubuntu-stacki; cpio -iudcm ) 
 	(				\
 		cd ubuntu-stacki;	\
@@ -56,8 +56,8 @@ build: dirs rpminst debinst
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
-	$(INSTALL) -m0644 linux $(ROOT)/$(PKGROOT)/vmlinuz-$(UBUNTU_VERSION)-$(RELEASE)-$(ARCH)
-	$(INSTALL) -m0644 ubuntu-stacki.img $(ROOT)/$(PKGROOT)/initrd-$(UBUNTU_VERSION)-$(RELEASE)-$(ARCH)
+	$(INSTALL) -m0644 linux $(ROOT)/$(PKGROOT)/vmlinuz-$(shell echo $(UBUNTU_PRODUCT) | tr A-Z a-z)-$(IMAGE_VERSION)-$(ARCH)
+	$(INSTALL) -m0644 ubuntu-stacki.img $(ROOT)/$(PKGROOT)/initrd-$(shell echo $(UBUNTU_PRODUCT) | tr A-Z a-z)-$(IMAGE_VERSION)-$(ARCH)
 
 clean::
 	rm -rf $(CURDIR)/localrepo
