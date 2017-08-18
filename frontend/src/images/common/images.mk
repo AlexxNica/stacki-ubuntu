@@ -50,6 +50,7 @@ build: dirs rpminst debinst
 	$(EXTRACT) initrd.gz | ( cd ubuntu-stacki; cpio -iudcm ) 
 	(				\
 		cd ubuntu-stacki;	\
+		rm -f lib/libuuid* lib/libblkid* lib/libnl* lib/libgcrypt* lib/libgpg-error.so.0; \
 		find . | cpio -oc | gzip -c - > ../ubuntu-stacki.img; \
 	)
 

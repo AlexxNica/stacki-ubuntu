@@ -30,10 +30,9 @@ class Plugin(stack.commands.Plugin):
 		controller_output = row[0]['col-1']
 
 
-#		row = self.owner.call('report.host.network',
-#			[ attrs['hostname'] ])
+		row = self.owner.call('list.network')
 #		#$network_output = for r in row['col-1']
-#		network_output = [ r['col-1'] for r in row ]
+		network_output = row
 #
 		row = self.owner.call('list.host.interface',
 			[ attrs['hostname'] ])
@@ -53,9 +52,11 @@ csv_partitions = %s
 
 csv_controller = %s
 
-interface = %s
+interfaces = %s
+
+networks = %s
 
 """
-% (partition_output, controller_output, interface_output))
+% (partition_output, controller_output, interface_output, network_output))
 
                 self.owner.addText(']]></stack:stacki>\n')

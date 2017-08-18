@@ -36,7 +36,7 @@ for line in o.split('\n'):
         hwaddr = None
 
         tokens = line.split()
-        if len(tokens) > 13:
+        if len(tokens) > 11:
                 # print 'tokens: %s' % tokens
                 #
                 # strip off last ':'
@@ -72,8 +72,6 @@ for line in file.readlines():
 file.close()
 
 request = os.environ['url']
-#request = 'https://%s/install/sbin/profile.cgi?os=ubuntu&arch=x86_64&np=%d&profile=full' % \
-#	(os.environ['gateway'], numcpus)
 request += "&profile=full"
 curlcmd.append(request)
 
