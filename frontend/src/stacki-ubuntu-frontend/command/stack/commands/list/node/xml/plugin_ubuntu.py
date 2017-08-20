@@ -38,10 +38,26 @@ class Plugin(stack.commands.Plugin):
 			[ attrs['hostname'] ])
 		interface_output = row
 
-#		cmd = '/opt/stack/sbin/read-ssh-private-key ED25519'
-#		p = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
-#		o,e = p.communicate()
-#		ed25519_key = o
+		ssh_keys = {}	
+		key_type = [ 'RSA', 'ECDSA', 'ED25519' ]
+		for k in key_type:
+			cmd = '/opt/stack/sbin/read-ssh-private-key %s' % k
+			p = subprocess.Popen(cmd,stdout=subprocess.PIPE,
+					stderr=subprocess.PIPE,shell=True)
+			o,e = p.communicate()
+			ssh_keys['%s_key' % k.lower()] = o
+
+			cmd = 'cat /etc/ssh/ssh_host_%s_key.pub' % k.lower()
+			p = subprocess.Popen(cmd,stdout=subprocess.PIPE,
+					stderr=subprocess.PIPE,shell=True)
+			o,e = p.communicate()
+			ssh_keys['%s_key.pub' % k.lower()] = o
+		
+		cmd = 'cat /root/.ssh/id_rsa.pub'
+		p = subprocess.Popen(cmd,stdout=subprocess.PIPE,
+			stderr=subprocess.PIPE,shell=True)
+		o,e = p.communicate()
+		ssh_keys['authorized_key'] = o
         	self.owner.addText('<stack:stacki><![CDATA[\n')
 
                 self.owner.addText("""
@@ -56,7 +72,9 @@ interfaces = %s
 
 networks = %s
 
+ssh_keys = %s
+
 """
-% (partition_output, controller_output, interface_output, network_output))
+% (partition_output, controller_output, interface_output, network_output, ssh_keys))
 
                 self.owner.addText(']]></stack:stacki>\n')
