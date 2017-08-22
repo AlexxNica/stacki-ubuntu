@@ -149,8 +149,8 @@ class Command(stack.commands.Command,
 					end_str = '100%'
 
 				late_cmd.append('in-target /sbin/parted -s ' \
-					'/dev/%s mkpart %s %s %s' %       \
-                        		(device, primary, start_str, end_str))
+					'/dev/%s mkpart %s %s %s %s' %       \
+                        		(device, primary, fstype, start_str, end_str))
 
 				late_cmd.append('export DEVNAME=' \
 					'`/target/bin/lsblk /dev/sdb -ro NAME | '  \
@@ -159,9 +159,9 @@ class Command(stack.commands.Command,
 					'/dev/$DEVNAME' % fstype)
 				late_cmd.append('in-target /bin/mkdir -p %s' \
 					% mntpt)
-				late_cmd.append('in-target /bin/echo ' 		 \
+				late_cmd.append('/bin/echo ' 			\
 					'"/dev/$DEVNAME %s %s defaults 0 0" >> ' \
-					'/target/etc/fstab' % 		 \
+					'/target/etc/fstab' % 		 	\
 					(mntpt, fstype))
 				start = end
 				start_str = end_str
