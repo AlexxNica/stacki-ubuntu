@@ -12,7 +12,7 @@
 
 	<main>
 		<partman-early_command cond="not nukedisks">
-			/opt/stack/bin/python get_etc_fstab.py
+			/opt/stack/bin/python /opt/stack/bin/get_etc_fstab.py
 		</partman-early_command>
 		<partman-auto>init_automatically_partition select entire_disk</partman-auto>
 		<partman-auto>disk string &ubuntu.grub_dev;</partman-auto>
