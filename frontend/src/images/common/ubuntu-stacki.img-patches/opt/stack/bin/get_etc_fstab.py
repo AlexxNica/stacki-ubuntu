@@ -1,4 +1,3 @@
-#!/opt/stack/bin/python
 import subprocess
 import tempfile
 
@@ -8,14 +7,11 @@ o, e = p.communicate()
 disks = o.split()
 fstab_contents = None
 
-print disks
-
 # Search for /etc/fstab
 for disk in disks:
 	cmd = "lsblk -nro NAME %s" % disk
 	p = subprocess.Popen(cmd.split(), stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	parts = p.communicate()[0].split()
-	print(parts)
 
 	for part in parts:
 		partname = '/dev/' + part
@@ -26,16 +22,13 @@ for disk in disks:
 		# Mount file
 		mnt = 'mount %s %s' % (partname, tmpfile)
 		mnt_p = subprocess.Popen(mnt.split(), stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		print(mnt_p.communicate()[1])
 		fstab_path = tmpfile + '/etc/fstab'
 
 		try:
 			f = open(fstab_path, 'r')
-			print('no exception while %s' % partname)
 			fstab_contents = f.readlines()
 			f.close()
 		except:
-			print ('exception while %s' % fstab_path)
 			pass
 
 		umnt = 'umount %s' % tmpfile
@@ -56,14 +49,16 @@ for line in fstab_contents:
 	if line.startswith('#'):
 		continue
 	fstab_entry = line.split()
-	
+
 	if line and len(fstab_entry) > 4:
-		mntpt = line[1]
+		mntpt  = fstab_entry[1].strip()
+		fstype = fstab_entry[2].strip()
 		#
-		# Write entry to fstab only if mountpoint not in 
+		# Write entry to fstab only if mountpoint not in
 		# /, /var/, /boot
 		#
-		if mntpt not in ['/', '/var', '/boot']:
+		if mntpt not in ['/', '/var', '/boot', 'swap'] and \
+			fstype not in ['swap']:
 			old_fstab.write(line)
 
 old_fstab.close()
