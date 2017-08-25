@@ -1,6 +1,7 @@
 # @SI_Copyright@
 # @Copyright@
 
+import shlex
 import stack.api
 
 class Command(stack.commands.Command,
@@ -141,9 +142,17 @@ class Command(stack.commands.Command,
 				end = start + size
 				end_str = str(end) + 'MB'
 				primary = ''
+				fs_options = ''
+				mnt_options = 'defaults 0 0'
 
-				if 'primary' in options:
-					primary = 'primary'
+				options_arr = shlex.split(options)
+				for o in options_arr:
+					if '--is_primary' in o:
+						primary = 'primary'
+					elif '--fs_options=' in o:
+						fs_options = o.replace('--fs_options=','')
+					elif '--mnt_options' in o:
+						mnt_options = o.replace('--mnt_options=', '') 
 
 				if size == 0:
 					end_str = '100%'
@@ -155,14 +164,14 @@ class Command(stack.commands.Command,
 				late_cmd.append('export DEVNAME=' \
 					'`/target/bin/lsblk /dev/sdb -ro NAME | '  \
 					'/target/usr/bin/tail -1`')
-				late_cmd.append('in-target /sbin/mkfs -t %s ' \
-					'/dev/$DEVNAME' % fstype)
+				late_cmd.append('in-target /sbin/mkfs -t %s %s ' \
+					'/dev/$DEVNAME' % (fstype, fs_options))
 				late_cmd.append('in-target /bin/mkdir -p %s' \
 					% mntpt)
 				late_cmd.append('/bin/echo ' 			\
-					'"/dev/$DEVNAME %s %s defaults 0 0" >> ' \
+					'"/dev/$DEVNAME %s %s %s" >> ' \
 					'/target/etc/fstab' % 		 	\
-					(mntpt, fstype))
+					(mntpt, fstype, mnt_options))
 				start = end
 				start_str = end_str
 
