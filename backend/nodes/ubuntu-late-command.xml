@@ -10,6 +10,9 @@
 	</stack:copyright>
 
 <late_command>
+<stack:eval shell="/bin/sh">
+/opt/stack/bin/stack report host partition &hostname;  bootDisk=False nukedisks=&nukedisks;
+</stack:eval>
 in-target /usr/bin/curl -s -k -o /target/dev/null/ https://&Kickstart_PrivateAddress;/install/sbin/public/setPxeboot.cgi?params='\{"action":"os"\}';
 in-target /usr/bin/curl -s -k -o /target/dev/null/ https://&Kickstart_PrivateAddress;/install/sbin/public/setDbPartitions.cgi;
 in-target sed -i 's/PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config;

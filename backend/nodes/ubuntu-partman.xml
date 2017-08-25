@@ -11,6 +11,9 @@
 
 
 	<main>
+		<partman-early_command cond="not nukedisks">
+			/opt/stack/bin/python /opt/stack/bin/get_etc_fstab.py
+		</partman-early_command>
 		<partman-auto>init_automatically_partition select entire_disk</partman-auto>
 		<partman-auto>disk string &ubuntu.grub_dev;</partman-auto>
 		<partman-auto>method string regular</partman-auto>
@@ -19,55 +22,10 @@
 		<partman-lvm>device_remove_lvm_span boolean true</partman-lvm>
 		<partman-lvm>confirm boolean true</partman-lvm>
 		<partman-md>device_remove_md boolean true</partman-md>
-		<partman-auto cond="nukedisks">expert_recipe string		\
-                root ::						\
-                16384 16384 16384 ext4 				\
-                        $primary{ } $bootable{ } 		\
-                        method{ format } format{ } 		\
-                        use_filesystem{ } filesystem{ ext4 } 	\
-                        mountpoint{ / } 			\
-                . 						\
-                8192 8192 8192 linux-swap 			\
-                        $primary{ } 				\
-                        method{ swap } format{ } 		\
-                . 						\
-                16384 16384 16384 xfs 				\
-                        $primary{ } 				\
-                        method{ format } format{ } 		\
-                        use_filesystem{ } filesystem{ xfs } 	\
-                        mountpoint{ /var } 			\
-		.						\
-		16384 10240 -1 xfs				\
-			$primary{ } 				\
-			method{ format } format{ } 		\
-			use_filesystem{ } filesystem{ xfs } 	\
-			mountpoint{ /state/partition1 } 	\
-		.
-		</partman-auto>
-		<partman-auto cond="not nukedisks">expert_recipe string		\
-                root ::						\
-                16384 16384 16384 ext4 				\
-                        $primary{ } $bootable{ } 		\
-                        method{ format } format{ } 		\
-                        use_filesystem{ } filesystem{ ext4 } 	\
-                        mountpoint{ / } 			\
-                . 						\
-                8192 8192 8192 linux-swap 			\
-                        $primary{ } 				\
-                        method{ swap } format{ } 		\
-                . 						\
-                16384 16384 16384 xfs 				\
-                        $primary{ } 				\
-                        method{ format } format{ } 		\
-                        use_filesystem{ } filesystem{ xfs } 	\
-                        mountpoint{ /var } 			\
-		.						\
-		16384 10240 -1 xfs				\
-			$primary{ } 				\
-			method{ keep }				\
-			use_filesystem{ } filesystem{ xfs } 	\
-			mountpoint{ /state/partition1 } 	\
-		.
+		<partman-auto>expert_recipe string	\
+		<stack:eval shell="/bin/sh">
+		/opt/stack/bin/stack report host partition &hostname; bootDisk=True nukedisks=&nukedisks;
+		</stack:eval>
 		</partman-auto>
 		<partman>choose_partition select finish</partman>
 		<partman-lvm>menu/finish select finish</partman-lvm>
