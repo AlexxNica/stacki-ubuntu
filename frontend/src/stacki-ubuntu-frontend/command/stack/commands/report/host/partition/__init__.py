@@ -3,6 +3,7 @@
 
 import shlex
 import stack.api
+from stack.exception import *
 
 class Command(stack.commands.Command,
 	stack.commands.HostArgumentProcessor):
@@ -178,7 +179,6 @@ class Command(stack.commands.Command,
 		return late_cmd
 
 	def run(self, params, args):
-
 		# Parse Params
 		(bootDiskF, nukedisks) = self.fillParams([
                         ('bootDisk', None, True),
@@ -194,7 +194,32 @@ class Command(stack.commands.Command,
 		self.bootdisk = None
 
 		for host in hosts:
+			if self.getHostAttr(host,'os') != 'ubuntu':
+				raise CommandError(self, "This is not ubuntu")
+
 			result = self.call('list.storage.partition', ['output-format=json', host])
+
+			if not result:
+				#try the appliance
+				appliance = self.getHostAttr(host,'appliance')
+				result = self.call('list.storage.partition', 
+						['output-format=json', appliance])
+			# good god, default to something
+			if not result:
+				result = [{"partid": 2, "fstype": "swap", "mountpoint": "swap", 
+					"device": "sda", "scope": "backend-0-0", "options": "", 
+					"size": 16000}, {"partid": 4, "fstype": "xfs", 
+					"mountpoint": "/state/partition1", "device": "sda", 
+					"scope": "backend-0-0", 
+					"options": "--primary=1 \
+					--mnt_options=\"async auto\" --fs_options=\"nosuid\""
+					, "size": 0}, 
+					{"partid": 1, "fstype": "xfs", "mountpoint": "/", 
+					"device": "sda", "scope": "backend-0-0", "options": "",
+					"size": 20000}, 
+					{"partid": 3, "fstype": "xfs", "mountpoint": "/var", 
+					"device": "sda", "scope": "backend-0-0", 
+					"options": "", "size": 25000}]
 		
 		part_dict = self.build_partition_dict(result)
 

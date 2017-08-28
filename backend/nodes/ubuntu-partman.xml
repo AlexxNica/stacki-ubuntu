@@ -14,6 +14,9 @@
 		<partman-early_command cond="not nukedisks">
 			/opt/stack/bin/python /opt/stack/bin/get_etc_fstab.py
 		</partman-early_command>
+		<preseed>early_command string anna-install openssh-client-udeb\
+		network-console parted-udeb openssh-server-udeb strace-udeb;\
+		ldconfig &amp;&amp; /opt/stack/bin/stacki-prep.sh</preseed>
 		<partman-auto>init_automatically_partition select entire_disk</partman-auto>
 		<partman-auto>disk string &ubuntu.grub_dev;</partman-auto>
 		<partman-auto>method string regular</partman-auto>
