@@ -1,21 +1,16 @@
 #!/opt/stack/bin/python
 import subprocess
 import tempfile
-import shlex
-
 from stack.commands import *
 
 sys.path.append('/tmp')
 from stack_site import *
 
-def getDisks():
+def getSavedPartitions():
 	cmd = "list-devices disk"
 	p = subprocess.Popen(cmd.split(), stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	o, e = p.communicate()
 	disks = o.split()
-	return disks
-
-def getSavedPartitions(disks):
 	fstab_contents = None
 
 	# Search for /etc/fstab
@@ -80,55 +75,8 @@ def processOldFstab(fstab_contents):
 
 	old_fstab.close()
 
-def getNukes(host_disks, s):
-	disks = []
-
-	if s and s.upper() in [ 'ALL', 'YES', 'Y', 'TRUE', '1' ]:
-		disks = host_disks
-	elif s and s.upper() in ['NONE', 'NO', 'N', 'FALSE', '0' ]:
-                disks = []
-	elif s:
-		#
-		# validate the user input for nukedisks -- that is, make sure 
-		# the disks specified by the user are actually on this machine
-		#
-		for disk in s.split():
-			if disk in host_disks:
-				disks.append(disk)
-
-	return disks
-
-
-def nukeIt(disk):
-	#
-	# Clear out the master boot record of the drive
-	#
-	FNULL = open(os.devnull, 'w')
-
-	if attributes.has_key('disklabel'):
-		disklabel = attributes['disklabel']
-	else:
-		disklabel = 'gpt'
-
-        cmd = 'dd if=/dev/zero of=/dev/%s count=512 bs=1' % disk
-#        cmd = '/sbin/wipefs -a %s' % disk
-	subprocess.call(shlex.split(cmd),
-		stdout = FNULL, stderr = subprocess.STDOUT)
-
-	cmd = 'parted -s /dev/%s mklabel %s' % (disk, disklabel)
-	subprocess.call(shlex.split(cmd),
-		stdout = FNULL, stderr = subprocess.STDOUT)
-
-	FNULL.close()
-	return
-
-
-
-disks = getDisks()
-
 if str2bool(attributes['nukedisks']) == False:
-	fstab_contents = getSavedPartitions(disks)
+	fstab_contents = getSavedPartitions()
 	processOldFstab(fstab_contents)
 else:
-	for disk in disks:
-		nukeIt(disk)
+	pass

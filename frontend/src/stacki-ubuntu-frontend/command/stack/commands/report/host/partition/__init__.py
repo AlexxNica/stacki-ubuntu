@@ -127,6 +127,9 @@ class Command(stack.commands.Command,
 				sorted(partition_list, key=lambda k: k['partid'])
 			
 			# Wipe partition table if nukedisks=true
+#			late_cmd.append('in-target /bin/dd if=/dev/zero of=/dev/%s ' \
+#					'count=512 bs=1' % disk)
+
 			late_cmd.append('in-target /sbin/parted -s' \
 				' /dev/%s mklabel gpt' % disk)
 			start = 0
@@ -162,11 +165,12 @@ class Command(stack.commands.Command,
 					'/dev/%s mkpart %s %s %s %s' %       \
                         		(device, primary, fstype, start_str, end_str))
 
-				late_cmd.append('export DEVNAME=' \
-					'`/target/bin/lsblk /dev/sdb -ro NAME | '  \
-					'/target/usr/bin/tail -1`')
+				cmd = 'export DEVNAME=`/target/bin/lsblk /dev/%s' % device
+				cmd += ' -ro NAME | /target/usr/bin/tail -1`'
+				late_cmd.append(cmd)
+						
 				late_cmd.append('in-target /sbin/mkfs -t %s %s ' \
-					'/dev/$DEVNAME' % (fstype, fs_options))
+					'-f /dev/$DEVNAME' % (fstype, fs_options))
 				late_cmd.append('in-target /bin/mkdir -p %s' \
 					% mntpt)
 				late_cmd.append('/bin/echo ' 			\

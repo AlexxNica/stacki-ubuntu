@@ -6,17 +6,23 @@ import os
 sys.path.append('/tmp')
 from stack_site import *
 
+tgt = sys.argv[1]
+
+if tgt == 'intarget':
+	rdir = '/target/'
+else:
+	rdir = '/'
 
 for k,v in ssh_keys.iteritems():
 
 	if k == 'authorized_key':
-		fname = '/target/root/.ssh/authorized_keys'
+		fname = '%sroot/.ssh/authorized_keys' % rdir
 		f = open(fname, 'w')	
 		f.write(ssh_keys[k])
 		os.chmod(fname, 0o600)
 		f.close()
 	else:
-		fname = '/target/etc/ssh/ssh_host_%s' % k
+		fname = '%setc/ssh/ssh_host_%s' % (rdir,k)
 		f = open(fname, 'w')	
 		f.write(ssh_keys[k])
 		f.close()

@@ -1,8 +1,4 @@
 #!/bin/sh
-log "======================="
-log "Starting stacki-prep ..."
-log "======================="
-
 # Compile library path so /opt/stack/bin/stack works.
 ldconfig
 #=============================================
@@ -10,7 +6,6 @@ ldconfig
 #---------------------------------------------
 
 /opt/stack/bin/python /opt/stack/bin/stacki-profile.py
-
 #
 # stacki-profile.py outputs the file /tmp/stacki-profile.xml which contains
 # two "chapters":
@@ -31,31 +26,29 @@ cat /tmp/stacki-profile.xml \
 	| /opt/stack/bin/stack list host profile chapter=stacki \
 	> /tmp/stack_site/__init__.py
 
-/opt/stack/bin/python /opt/stack/bin/stacki-status.py install profile parsed
-
 #
 # configure the hardware disk array controller first
 #
-/opt/stack/bin/python /opt/stack/bin/storage-controller-client.py
+#/opt/stack/bin/python /opt/stack/bin/storage-controller-client.py
 
 #
 # then configure the partitions
 #
-/opt/stack/bin/python /opt/stack/bin/output-partition.py > /tmp/partition.xml
+#/opt/stack/bin/python /opt/stack/bin/output-partition.py > /tmp/partition.log 2>&1
 
-#/opt/stack/bin/python /opt/stack/bin/network-interfaces-config.py
-#
-# give ourselves the ability to hold the installation prior to the start of yast
-#
-grep stack-debug /proc/cmdline 2>&1 > /dev/null
-if [ $? -eq 0 ]
-then
-	touch /tmp/wait
-	while [ -f /tmp/wait ]
-	do
-		echo "Stacki debug wait loop - remove /tmp/wait to continue"
-		sleep 1
-		/opt/stack/bin/python /opt/stack/bin/stacki-status.py install wait 1
-	done
-fi
+mkdir -p /root/.ssh
+mkdir -p /etc/ssh
+/opt/stack/bin/stacki-ssh-keys.py "/" > /tmp/pre.log 2>&1
+/usr/sbin/sshd -f /etc/sshd_config.installer -h /etc/ssh/ssh_host_ecdsa_key >> /tmp/pre.log 2>&1
 
+#/opt/stack/bin/get_etc_fstab.py >> /tmp/pre.log 2>&1
+#/opt/stack/bin/get_etc_fstab.py
+
+# give ourselves the ability to hold the installation prior to the start of preseed
+#
+
+#/opt/stack/bin/stacki-debug.py
+
+#while [ -f /tmp/debug ]; do 
+#	sleep 10
+#done

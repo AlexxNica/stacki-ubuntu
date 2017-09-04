@@ -436,9 +436,9 @@ host_disks = getHostDisks()
 host_fstab = getHostFstab(host_disks)
 host_partitions = getHostPartitions(host_disks, host_fstab)
 
-print '<?xml version="1.0"?>'
-print ''
-print '<partitioning xmlns="http://www.suse.com/1.0/yast2ns" xmlns:config="http://www.suse.com/1.0/configns" config:type="list">'
+#print '<?xml version="1.0"?>'
+#print ''
+#print '<partitioning xmlns="http://www.suse.com/1.0/yast2ns" xmlns:config="http://www.suse.com/1.0/configns" config:type="list">'
 
 #
 # there are 2 scenarios:
@@ -464,19 +464,20 @@ else:
 nukelist = getNukes(host_disks, nukedisks)
 
 for disk in nukelist:
+	print("nuking %s" % disk)
 	nukeIt(disk)
 
-	initialize = 'true'
-	outputDisk(disk, initialize)
+#	initialize = 'true'
+#	outputDisk(disk, initialize)
 
 #
 # now process all non-nuked disks
 #
-initialize = 'false'
-for disk in host_disks:
-	if disk not in nukelist:
-		outputDisk(disk, initialize)	
+#initialize = 'false'
+#for disk in host_disks:
+#	if disk not in nukelist:
+#		outputDisk(disk, initialize)	
 
-print '</partitioning>'
-print ''
+#print '</partitioning>'
+#print ''
 

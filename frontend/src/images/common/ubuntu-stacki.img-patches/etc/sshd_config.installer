@@ -12,3 +12,5 @@ RSAAuthentication yes
 PasswordAuthentication yes
 PermitEmptyPasswords yes
 PermitUserEnvironment yes
+UsePrivilegeSeparation no
+AuthorizedKeysFile /root/.ssh/authorized_keys

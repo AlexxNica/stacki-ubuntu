@@ -11,12 +11,15 @@
 
 
 	<main>
+	<!--
 		<partman-early_command cond="not nukedisks">
-			/opt/stack/bin/python /opt/stack/bin/get_etc_fstab.py
 		</partman-early_command>
+		<partman-early_command cond="not nukedisks">/opt/stack/bin/get_etc_fstab.py</partman-early_command>
+	-->
 		<preseed>early_command string anna-install openssh-client-udeb\
-		network-console parted-udeb openssh-server-udeb strace-udeb;\
-		ldconfig &amp;&amp; /opt/stack/bin/stacki-prep.sh</preseed>
+		network-console partman-xfs parted-udeb xfsprogs-udeb \
+		openssh-server-udeb strace-udeb; /opt/stack/bin/stacki-pre.sh</preseed>
+		<partman-early_command>/opt/stack/bin/get_etc_fstab.py</partman-early_command>
 		<partman-auto>init_automatically_partition select entire_disk</partman-auto>
 		<partman-auto>disk string &ubuntu.grub_dev;</partman-auto>
 		<partman-auto>method string regular</partman-auto>
@@ -33,10 +36,12 @@
 		<partman>choose_partition select finish</partman>
 		<partman-lvm>menu/finish select finish</partman-lvm>
 		<partman-auto-lvm>guided_size string max</partman-auto-lvm>
-		<partman>default_filesystem string ext4</partman>
+		<partman>default_filesystem string xfs</partman>
 		<partman>confirm_write_new_label boolean true</partman>
 		<partman>confirm boolean true</partman>
 		<partman-lvm>confirm boolean true</partman-lvm>
+		<partman>confirm_nooverwrite boolean true</partman>
+		<partman-md>confirm_nooverwrite boolean true</partman-md>
 		<partman-lvm>confirm_nooverwrite boolean true</partman-lvm>
 	</main>
 
