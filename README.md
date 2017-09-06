@@ -29,8 +29,13 @@ To make this work, we needed to write into the installer, which limits the versi
 Download stacki-ubuntu-pallets
 
 ```
-wget https://s3.amazonaws.com/stacki/public/pallets/4.0/open-source/stacki-ubuntu-frontend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso 
-wget https://s3.amazonaws.com/stacki/public/pallets/4.0/open-source/stacki-ubuntu-backend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso
+wget https://teradata-stacki.s3.amazonaws.com/release/stacki/4.x/stacki-ubuntu-frontend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso
+
+md5 = 451b71511db38146fc3ed83b52607c41
+
+wget https://teradata-stacki.s3.amazonaws.com/release/stacki/4.x/stacki-ubuntu-backend-4.0_20170414_c4aff2a-7.x.x86_64.disk1.iso
+
+md5 = 670e4df448162d7ee388ffdfe435b5b7
 ```
 
 You have to add and run the stacki-ubuntu-frontend pallet before adding the stacki-ubuntu-backend pallet or the Ubunto-Server iso. So let's do that:
