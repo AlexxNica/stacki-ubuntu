@@ -168,9 +168,14 @@ class Command(stack.commands.Command,
 				cmd = 'export DEVNAME=`/target/bin/lsblk /dev/%s' % device
 				cmd += ' -ro NAME | /target/usr/bin/tail -1`'
 				late_cmd.append(cmd)
-						
-				late_cmd.append('in-target /sbin/mkfs -t %s %s ' \
-					'-f /dev/$DEVNAME' % (fstype, fs_options))
+
+				if fstype == 'xfs':
+					late_cmd.append('in-target /sbin/mkfs -t %s ' \
+						'%s -f /dev/$DEVNAME' % (fstype,fs_options))
+				else:
+					late_cmd.append('in-target /sbin/mkfs -t %s ' \
+						'%s -F /dev/$DEVNAME' % (fstype,fs_options))
+
 				late_cmd.append('in-target /bin/mkdir -p %s' \
 					% mntpt)
 				late_cmd.append('/bin/echo ' 			\

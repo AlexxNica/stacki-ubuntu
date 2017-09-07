@@ -268,5 +268,3 @@ class Command(stack.commands.list.host.command):
                                 'channel'
                                 ])
 
-
-RollName = "stacki"
